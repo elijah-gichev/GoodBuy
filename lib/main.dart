@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: Color(0xffE5E5E5),
         primaryColor: Color(0xffE5E5E5), //#E5E5E5
       ),
-      title: 'First page',
+      title: "It's First page",
       home: FirstPage(),
     );
   }
