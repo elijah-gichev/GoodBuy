@@ -1,9 +1,28 @@
 import 'package:flutter/material.dart';
+import 'about.dart';
 
 class FirstPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        bottomOpacity: 0.0,
+        elevation: 0.0,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.keyboard_arrow_right,
+              size: 35,
+            ),
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => About()));
+            },
+          ),
+        ],
+      ),
+      backgroundColor: Colors.white,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

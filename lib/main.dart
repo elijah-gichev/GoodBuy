@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pages/welcome.dart';
+import 'pages/about.dart';
 
 void main() => runApp(MyApp());
 
@@ -8,11 +9,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        backgroundColor: Color(0xffE5E5E5),
+        backgroundColor: Colors.white,
+        //backgroundColor: Color(0xffE5E5E5),
         primaryColor: Color(0xffE5E5E5), //#E5E5E5
       ),
       title: "It's First page",
       home: FirstPage(),
+      //home: FirstPage(),
     );
   }
 }
