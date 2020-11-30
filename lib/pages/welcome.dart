@@ -8,6 +8,7 @@ class FirstPage extends StatelessWidget {
     //in the future will be used to wait for loading
     Future.delayed(Duration(seconds: 3), () {
       Navigator.push(context, MaterialPageRoute(builder: (context) => About()));
+      //print('Произошла задержка!!!');
     });
 
     return Scaffold(

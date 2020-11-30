@@ -23,6 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+#  qr_code_scanner: ^0.0.13 возможно надо как-то удалить его из package
+  flutter_barcode_scanner: ^1.0.1
 
 
   # The following adds the Cupertino Icons font to your application.

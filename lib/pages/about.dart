@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'QR_scanner.dart';
 
 class About extends StatelessWidget {
   String _product_name = 'Princess_Ksu';
@@ -43,12 +44,10 @@ class About extends StatelessWidget {
               ],
             ),
             width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.85,
+            height: MediaQuery.of(context).size.height * 0.8,
             child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
+              padding: EdgeInsets.all(10),
+              child: ListView(
                 children: [
                   Row(
                     children: [
@@ -116,6 +115,17 @@ class About extends StatelessWidget {
               ),
             ),
           ),
+          IconButton(
+              icon: Icon(
+                Icons.keyboard_arrow_down,
+                size: 35,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => QRScanner()),
+                );
+              })
         ]),
       ),
     );
