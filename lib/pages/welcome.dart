@@ -4,6 +4,12 @@ import 'about.dart';
 class FirstPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    //To switch the screen to home after 3 seconds
+    //in the future will be used to wait for loading
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => About()));
+    });
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
