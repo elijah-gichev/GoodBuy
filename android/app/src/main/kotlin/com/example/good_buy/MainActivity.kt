@@ -1,4 +1,4 @@
-package com.example.cource_1
+package com.example.good_buy
 
 import io.flutter.embedding.android.FlutterActivity
 
