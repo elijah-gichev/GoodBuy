@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'pages/welcome.dart';
+
 import 'pages/about.dart';
 import 'pages/QR_scanner.dart';
-
-//В ФАЙЛЕ build.gradle изменена минимальная версия sdk с 16 на 24(андроид 7)
-//из-за сканера
 
 void main() => runApp(MyApp());
 
