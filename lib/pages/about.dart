@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'QR_scanner.dart';
 
 class About extends StatelessWidget {
   String _product_name = 'Princess_Ksu';
   double _cost = 100;
+
+  final String barcodeScanRes;
+  About(this.barcodeScanRes);
 
   String _about_product1 =
       "Конфеты Milka - это сочетание классического молочного шоколада и яркой карамели с миндалём. Очень вкусно и сладко.";
@@ -54,7 +56,8 @@ class About extends StatelessWidget {
                       Image.asset('assets/product_logo.png'),
                       Column(
                         children: [
-                          Text(_product_name),
+                          Text(
+                              barcodeScanRes == null ? 'null' : barcodeScanRes),
                           Padding(
                             padding: EdgeInsets.only(left: 10),
                             child: Row(
@@ -121,10 +124,10 @@ class About extends StatelessWidget {
                 size: 35,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => QRScanner()),
-                );
+                // Navigator.push(
+                //   context,
+                //   //MaterialPageRoute(builder: (context) => QRScanner()),
+                // );
               })
         ]),
       ),
