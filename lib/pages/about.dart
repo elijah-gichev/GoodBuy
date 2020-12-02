@@ -29,21 +29,8 @@ class _AboutState extends State<About> {
       backgroundColor: Color(0xffF0D6C4),
       body: Center(
         child: Column(children: [
-          IconButton(
-            padding: EdgeInsets.only(
-              right: MediaQuery.of(context).size.width - 35,
-              top: 35,
-            ),
-            icon: Icon(
-              Icons.history,
-              size: 35,
-            ),
-            onPressed: () {
-              //Navigator.pop(context);
-            },
-          ),
           Container(
-            margin: EdgeInsets.only(top: 15),
+            margin: EdgeInsets.only(top: 45),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Color(0xffEFEAE3),
@@ -129,19 +116,45 @@ class _AboutState extends State<About> {
               ),
             ),
           ),
-          IconButton(
+        ]),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Color(0xffF0D6C4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              padding: EdgeInsets.all(0),
               icon: Icon(
-                Icons.keyboard_arrow_down,
+                Icons.history,
                 size: 35,
               ),
-              onPressed: () async {
-                String barcodeScanRes = await scanBarcodeNormal();
+              onPressed: () {
+                //Navigator.pop(context);
+              },
+            ),
+            Expanded(
+              child: IconButton(
+                //padding: EdgeInsets.only(bottom: 10),
+                icon: Icon(
+                  Icons.qr_code_scanner,
+                  size: 35,
+                ),
+                onPressed: () async {
+                  String barcodeScanRes = await scanBarcodeNormal();
 
-                setState(() {
-                  _barcodeScanRes = barcodeScanRes;
-                });
-              })
-        ]),
+                  setState(() {
+                    _barcodeScanRes = barcodeScanRes;
+                  });
+                },
+              ),
+            ),
+            SizedBox(
+              width: 35,
+              height: 35,
+            )
+          ],
+        ),
       ),
     );
   }
