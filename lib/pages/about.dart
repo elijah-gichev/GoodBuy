@@ -135,7 +135,7 @@ class _AboutState extends State<About> {
             ),
             Expanded(
               child: IconButton(
-                //padding: EdgeInsets.only(bottom: 10),
+                padding: EdgeInsets.only(right: 10),
                 icon: Icon(
                   Icons.qr_code_scanner,
                   size: 35,
