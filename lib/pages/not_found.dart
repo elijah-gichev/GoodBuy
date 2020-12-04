@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:good_buy/widgets/bottom_nav_bar.dart';
 
 import '../funcs/QR.dart';
 
@@ -36,44 +37,7 @@ class NotFound extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Color(0xffF0D6C4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              padding: EdgeInsets.all(0),
-              icon: Icon(
-                Icons.history,
-                size: 35,
-              ),
-              onPressed: () {
-                //Navigator.pop(context);
-              },
-            ),
-            Expanded(
-              child: IconButton(
-                padding: EdgeInsets.only(right: 10),
-                icon: Icon(
-                  Icons.qr_code_scanner,
-                  size: 35,
-                ),
-                onPressed: () async {
-                  String barcodeScanRes = await scanBarcodeNormal();
-                  toFindedPage(barcodeScanRes, context);
-                  // setState(() {
-                  //   _barcodeScanRes = barcodeScanRes;
-                  // });
-                },
-              ),
-            ),
-            SizedBox(
-              width: 35,
-              height: 35,
-            )
-          ],
-        ),
-      ),
+      bottomNavigationBar: BottomNavBar(),
     );
   }
 }

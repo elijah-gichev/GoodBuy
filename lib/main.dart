@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         //backgroundColor: Color(0xffE5E5E5),
         primaryColor: Color(0xffE5E5E5), //#E5E5E5
       ),
-      title: "It's First page",
+      title: "GoodBuy",
       //home: QRScanner(),
       home: FirstPage(),
       //home: FirstPage(),

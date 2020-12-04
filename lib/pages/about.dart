@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:good_buy/funcs/QR.dart';
+import '../widgets/bottom_nav_bar.dart';
 
 class About extends StatefulWidget {
   final String barcodeScanRes;
@@ -22,6 +24,19 @@ class _AboutState extends State<About> {
       "Конфеты сделаны из шоколада milka и именно это чувствуется первым делом. Сам шоколад очень вкусный и имеет насыщенный молочный вкус."
       "Правда, он немного приторный, но при этом очень вкусный.\n"
       "\nВнутри скорлупы находится тот же шоколадный крем, но красит его карамель, которая находится внутри";
+
+  String _formatBarcodeText(String barcode) {
+    int maxLength = 30;
+    String res = barcode;
+    if (barcode == null) {
+      res = 'null';
+    }
+
+    if (barcode.length > maxLength) {
+      res = barcode.substring(0, maxLength) + '...';
+    }
+    return res;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,31 +66,33 @@ class _AboutState extends State<About> {
                   Row(
                     children: [
                       Image.asset('assets/product_logo.png'),
-                      Column(
-                        children: [
-                          Text(_barcodeScanRes == null
-                              ? 'null'
-                              : _barcodeScanRes),
-                          Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                ),
-                                Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                ),
-                                Icon(Icons.star),
-                                Icon(Icons.star),
-                                Icon(Icons.star)
-                              ],
+                      Container(
+                        child: Column(
+                          children: [
+                            Text(
+                              _formatBarcodeText(_barcodeScanRes),
                             ),
-                          )
-                        ],
-                      )
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                                  Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                                  Icon(Icons.star),
+                                  Icon(Icons.star),
+                                  Icon(Icons.star)
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                   Container(
@@ -118,45 +135,7 @@ class _AboutState extends State<About> {
           ),
         ]),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Color(0xffF0D6C4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              padding: EdgeInsets.all(0),
-              icon: Icon(
-                Icons.history,
-                size: 35,
-              ),
-              onPressed: () {
-                //Navigator.pop(context);
-              },
-            ),
-            Expanded(
-              child: IconButton(
-                padding: EdgeInsets.only(right: 10),
-                icon: Icon(
-                  Icons.qr_code_scanner,
-                  size: 35,
-                ),
-                onPressed: () async {
-                  String barcodeScanRes = await scanBarcodeNormal();
-
-                  toFindedPage(barcodeScanRes, context);
-                  // setState(() {
-                  //   _barcodeScanRes = barcodeScanRes;
-                  // });
-                },
-              ),
-            ),
-            SizedBox(
-              width: 35,
-              height: 35,
-            )
-          ],
-        ),
-      ),
+      bottomNavigationBar: BottomNavBar(),
     );
   }
 }
