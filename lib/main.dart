@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pages/welcome.dart';
+import 'pages/not_found.dart';
 
 import 'pages/about.dart';
 import 'pages/QR_scanner.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       //home: QRScanner(),
       home: FirstPage(),
       //home: FirstPage(),
+      //home: NotFound(),
     );
   }
 }

@@ -143,9 +143,10 @@ class _AboutState extends State<About> {
                 onPressed: () async {
                   String barcodeScanRes = await scanBarcodeNormal();
 
-                  setState(() {
-                    _barcodeScanRes = barcodeScanRes;
-                  });
+                  toFindedPage(barcodeScanRes, context);
+                  // setState(() {
+                  //   _barcodeScanRes = barcodeScanRes;
+                  // });
                 },
               ),
             ),

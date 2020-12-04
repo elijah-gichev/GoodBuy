@@ -11,10 +11,10 @@ class FirstPage extends StatelessWidget {
     //in the future will be used to wait for loading
     Future.delayed(Duration(seconds: 3), () async {
       String barcodeScanRes = await scanBarcodeNormal();
-
-      print('barcodeScanRes: $barcodeScanRes');
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => About(barcodeScanRes)));
+      toFindedPage(barcodeScanRes, context);
+      //print('barcodeScanRes: $barcodeScanRes');
+      // Navigator.push(context,
+      //     MaterialPageRoute(builder: (context) => About(barcodeScanRes)));
     });
 
     return Scaffold(
