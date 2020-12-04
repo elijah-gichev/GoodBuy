@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:good_buy/funcs/QR.dart';
 
-class About extends StatelessWidget {
+class About extends StatefulWidget {
+  final String barcodeScanRes;
+  About(this.barcodeScanRes);
+
+  @override
+  _AboutState createState() => _AboutState(barcodeScanRes);
+}
+
+class _AboutState extends State<About> {
   String _product_name = 'Princess_Ksu';
   double _cost = 100;
 
-  final String barcodeScanRes;
-  About(this.barcodeScanRes);
+  String _barcodeScanRes;
+  _AboutState(this._barcodeScanRes);
 
   String _about_product1 =
       "Конфеты Milka - это сочетание классического молочного шоколада и яркой карамели с миндалём. Очень вкусно и сладко.";
@@ -20,20 +29,8 @@ class About extends StatelessWidget {
       backgroundColor: Color(0xffF0D6C4),
       body: Center(
         child: Column(children: [
-          IconButton(
-              padding: EdgeInsets.only(
-                right: MediaQuery.of(context).size.width - 35,
-                top: 35,
-              ),
-              icon: Icon(
-                Icons.keyboard_arrow_left,
-                size: 35,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
           Container(
-            margin: EdgeInsets.only(top: 10),
+            margin: EdgeInsets.only(top: 45),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Color(0xffEFEAE3),
@@ -56,8 +53,9 @@ class About extends StatelessWidget {
                       Image.asset('assets/product_logo.png'),
                       Column(
                         children: [
-                          Text(
-                              barcodeScanRes == null ? 'null' : barcodeScanRes),
+                          Text(_barcodeScanRes == null
+                              ? 'null'
+                              : _barcodeScanRes),
                           Padding(
                             padding: EdgeInsets.only(left: 10),
                             child: Row(
@@ -118,18 +116,46 @@ class About extends StatelessWidget {
               ),
             ),
           ),
-          IconButton(
+        ]),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Color(0xffF0D6C4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              padding: EdgeInsets.all(0),
               icon: Icon(
-                Icons.keyboard_arrow_down,
+                Icons.history,
                 size: 35,
               ),
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   //MaterialPageRoute(builder: (context) => QRScanner()),
-                // );
-              })
-        ]),
+                //Navigator.pop(context);
+              },
+            ),
+            Expanded(
+              child: IconButton(
+                padding: EdgeInsets.only(right: 10),
+                icon: Icon(
+                  Icons.qr_code_scanner,
+                  size: 35,
+                ),
+                onPressed: () async {
+                  String barcodeScanRes = await scanBarcodeNormal();
+
+                  toFindedPage(barcodeScanRes, context);
+                  // setState(() {
+                  //   _barcodeScanRes = barcodeScanRes;
+                  // });
+                },
+              ),
+            ),
+            SizedBox(
+              width: 35,
+              height: 35,
+            )
+          ],
+        ),
       ),
     );
   }
