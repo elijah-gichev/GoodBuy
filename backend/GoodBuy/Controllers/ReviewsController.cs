@@ -15,11 +15,19 @@ namespace GoodBuy.Controllers
         {
             _reviewsService = reviewService;
         }
-
+        /// <summary>
+        /// /api/reviews get all.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult<List<Review>> Get() =>
             _reviewsService.Get();
 
+        /// <summary>
+        /// /api/reviews/{QrCode} get.
+        /// </summary>
+        /// <param name="qrCode"></param>
+        /// <returns></returns>
         [HttpGet("{QrCode}", Name = "GetReview")]
         public ActionResult<Review> Get(string qrCode)
         {

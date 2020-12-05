@@ -45,7 +45,6 @@ C:\Users\emirb\goodbuy\backend\GoodBuy\bin\Debug\netcoreapp3.0\SharpCompress.dll
 C:\Users\emirb\goodbuy\backend\GoodBuy\bin\Debug\netcoreapp3.0\runtimes\win\native\libzstd.dll
 C:\Users\emirb\goodbuy\backend\GoodBuy\bin\Debug\netcoreapp3.0\runtimes\win\native\snappy32.dll
 C:\Users\emirb\goodbuy\backend\GoodBuy\bin\Debug\netcoreapp3.0\runtimes\win\native\snappy64.dll
-C:\Users\emirb\goodbuy\backend\GoodBuy\obj\Debug\netcoreapp3.0\GoodBuy.csprojAssemblyReference.cache
 C:\Users\emirb\goodbuy\backend\GoodBuy\obj\Debug\netcoreapp3.0\GoodBuy.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\emirb\goodbuy\backend\GoodBuy\obj\Debug\netcoreapp3.0\GoodBuy.AssemblyInfoInputs.cache
 C:\Users\emirb\goodbuy\backend\GoodBuy\obj\Debug\netcoreapp3.0\GoodBuy.AssemblyInfo.cs

@@ -12,7 +12,12 @@ namespace GoodBuy.Models
 
         [BsonElement("Name")]
         public string Name { get; set; }
+
+        [BsonElement("QrCode")]
         public string QrCode { get; set; }
+
+        [BsonElement("Link")]
+        public string Link { get; set; }
 
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime DateAdded { get; set; }
