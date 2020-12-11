@@ -38,7 +38,7 @@ namespace GoodBuy.Controllers
                 return NotFound();
             }
 
-            return review;
+            return Ok(review);
         }
         #region DangerousOperations
         /// <summary>
