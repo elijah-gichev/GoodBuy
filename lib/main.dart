@@ -5,6 +5,8 @@ import 'pages/not_found.dart';
 import 'pages/about.dart';
 import 'pages/QR_scanner.dart';
 
+import 'screens/history_page.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -19,10 +21,12 @@ class MyApp extends StatelessWidget {
         primaryColor: Color(0xffE5E5E5), //#E5E5E5
       ),
       title: "GoodBuy",
-      //home: QRScanner(),
-      home: FirstPage(),
-      //home: FirstPage(),
-      //home: NotFound(),
+      routes: {
+        '/': (context) =>
+            FirstPage(), //используется для корневой домашней папки вместо параметра home
+        '/about': (context) => About('temp data'),
+        '/not_found': (context) => NotFound(),
+      },
     );
   }
 }
