@@ -16,6 +16,7 @@ class HistoryCard extends StatelessWidget {
           _imgurl,
           width: 100,
           height: 100,
+          fit: BoxFit.cover
           ),
         new Column(children: [
           new Text(_heading),
