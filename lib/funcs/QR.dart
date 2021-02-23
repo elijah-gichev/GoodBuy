@@ -20,10 +20,8 @@ Future<String> scanBarcodeNormal() async {
 
 void toFindedPage(String barcodeScanRes, BuildContext context) {
   if (barcodeScanRes == '-1') {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => NotFound()));
+    Navigator.of(context).pushNamed('/not_found');
   } else {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => About(barcodeScanRes)));
+    Navigator.of(context).pushNamed('/about');
   }
 }
