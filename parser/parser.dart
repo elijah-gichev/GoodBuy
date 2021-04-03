@@ -31,29 +31,23 @@ main() async {
       var n = 0;
       var reviewsArray = []; // Массив отзывов
       reviews.children.forEach((review) {
-        var obj = {};
         n++;
         print("Отзыв #" + n.toString());
 
         var stars = review.querySelectorAll(".starsRating .star .on").length;
         print("Количество звезд: " + stars.toString());
-        obj["stars"] = stars;
 
         var author = review.querySelector(".authorName a").innerHtml;
         print("Автор: " + author.toString());
-        obj["author"] = author;
 
         var authorImage = review.querySelector(".authorPhoto img").attributes["data-original"];
         print("Аватарка автора: " + authorImage.toString());
-        obj["authorImage"] = authorImage;
 
         var date = review.querySelector(".created").innerHtml;
         print("Дата отзыва: " + date.toString());
-        obj["date"] = date;
 
         var title = review.querySelector(".reviewTitle a").innerHtml;
         print("Заголовок отзыва: " + title.toString());
-        obj["title"] = title;
 
         var textElem = review.querySelector(".reviewTextSnippet");
         textElem.querySelectorAll("div, a").forEach((element) {element.remove();});
@@ -61,17 +55,25 @@ main() async {
         text = text.replaceAll("&nbsp;", "");
         text = text.split(" ").where((element) => element != "").skip(2).join(" ");
         print("Текст отзыва: " + text.toString());
-        obj["text"] = text;
 
         var imagesElems = review.querySelectorAll(".review-previews-imgs-items a img");
         var images = [];
         imagesElems.forEach((element) {images.add(element.attributes["data-original"]);});
         print("Ссылки на фотографии из отзыва: ");
         images.forEach((element) {print(element);});
-        obj["images"] = images;
         print("");
 
-        reviewsArray.add(obj);
+        var reviewObj = {
+          "author": author,
+          "stars": stars,
+          "authorImage": authorImage,
+          "date": date,
+          "title": title,
+          "text": text,
+          "images": images
+        }
+
+        reviewsArray.add(reviewObj);
       });
       print(reviewsArray);
 
