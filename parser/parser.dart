@@ -7,63 +7,47 @@ main() async {
     if (response.statusCode == 200) {
       var document = parse(response.body);
       var name = document.querySelector('[itemprop="name"]').innerHtml; // Название товара
-      print("Название товара: " + name.toString());
-      var img = document.querySelector(".productHeaderContent img").attributes["src"];
-      print("Ссылка на изображение: " + img.toString());
-      var rating = document.querySelector('[itemprop="ratingValue"]').innerHtml; // Рейтинг товара
-      print("Рейтинг товара: " + rating.toString());
-      var ratingCount = document.querySelector('[itemprop="reviewCount"]').innerHtml; // Количество отзывов
-      print("Количество отзывов: " + ratingCount.toString());
-      var likes = document.querySelector('.RecommendRating-like span').innerHtml; // Лайки
-      print("Лайки: " + likes.toString());
-      var dislikes = document.querySelector('.RecommendRating-dislike span').innerHtml; // Дизайки
-      print("Дизлайки: " + dislikes.toString());
-      var description = document.querySelectorAll('[itemprop="description"] div');
-      var category = description[0].getElementsByTagName("a")[0].innerHtml;
-      var brand = description[1].getElementsByTagName("a")[0].innerHtml;
-      var type = description[2].getElementsByTagName("a")[0].innerHtml;
-      print("Категория: " + category.toString());
-      print("Бренд: " + brand.toString());
-      print("Тип: " + type.toString());
-      print("");
 
-      var reviews = document.querySelector(".list-comments");
-      var n = 0;
+      var img = document.querySelector(".productHeaderContent img").attributes["src"];
+
+      var rating = document.querySelector('[itemprop="ratingValue"]').innerHtml; // Рейтинг товара
+
+      var ratingCount = document.querySelector('[itemprop="reviewCount"]').innerHtml; // Количество отзывов
+
+      var likes = document.querySelector('.RecommendRating-like span').innerHtml; // Лайки
+
+      var dislikes = document.querySelector('.RecommendRating-dislike span').innerHtml; // Дизайки
+
+      var description = document.querySelectorAll('[itemprop="description"] div'); // Парсим все описание
+      var category = description[0].getElementsByTagName("a")[0].innerHtml; // Категория
+      var brand = description[1].getElementsByTagName("a")[0].innerHtml; // Бренд
+      var type = description[2].getElementsByTagName("a")[0].innerHtml; // Тип
+
+      var reviews = document.querySelector(".list-comments"); // Парсим лист отзывов
       var reviewsArray = []; // Массив отзывов
       reviews.children.forEach((review) {
-        n++;
-        print("Отзыв #" + n.toString());
+        var stars = review.querySelectorAll(".starsRating .star .on").length; // Сколько звезд поставил автор отзыва
 
-        var stars = review.querySelectorAll(".starsRating .star .on").length;
-        print("Количество звезд: " + stars.toString());
+        var author = review.querySelector(".authorName a").innerHtml; // Ник автора отзыва
 
-        var author = review.querySelector(".authorName a").innerHtml;
-        print("Автор: " + author.toString());
+        var authorImage = review.querySelector(".authorPhoto img").attributes["data-original"]; // Аватарка автора отзыва
 
-        var authorImage = review.querySelector(".authorPhoto img").attributes["data-original"];
-        print("Аватарка автора: " + authorImage.toString());
+        var date = review.querySelector(".created").innerHtml; // Дата написания отзыва
 
-        var date = review.querySelector(".created").innerHtml;
-        print("Дата отзыва: " + date.toString());
+        var title = review.querySelector(".reviewTitle a").innerHtml; // Заголовок отзыва
 
-        var title = review.querySelector(".reviewTitle a").innerHtml;
-        print("Заголовок отзыва: " + title.toString());
+        var textElem = review.querySelector(".reviewTextSnippet"); // Парсим данные отзыва
+        textElem.querySelectorAll("div, a").forEach((element) {element.remove();}); // Удаляем лишние элементы
+        var text = textElem.innerHtml; // Забираем текст отзыва
+        text = text.replaceAll("&nbsp;", ""); // Из текста выпиливаем html entity "неразрывный пробел"
+        text = text.split(" ").where((element) => element != "").skip(2).join(" "); // Убираем пробелы и пустую строку
+        // Получаем текст отзыва
 
-        var textElem = review.querySelector(".reviewTextSnippet");
-        textElem.querySelectorAll("div, a").forEach((element) {element.remove();});
-        var text = textElem.innerHtml;
-        text = text.replaceAll("&nbsp;", "");
-        text = text.split(" ").where((element) => element != "").skip(2).join(" ");
-        print("Текст отзыва: " + text.toString());
+        var imagesElems = review.querySelectorAll(".review-previews-imgs-items a img"); // Забираем все картинки
+        var images = []; // Массив для сбора ссылок на картинки отзыва
+        imagesElems.forEach((element) {images.add(element.attributes["data-original"]);}); // Записываем ссылки на картинки из отзыва
 
-        var imagesElems = review.querySelectorAll(".review-previews-imgs-items a img");
-        var images = [];
-        imagesElems.forEach((element) {images.add(element.attributes["data-original"]);});
-        print("Ссылки на фотографии из отзыва: ");
-        images.forEach((element) {print(element);});
-        print("");
-
-        var reviewObj = {
+        var reviewObj = { // Все данные собираем в объект
           "author": author,
           "stars": stars,
           "authorImage": authorImage,
@@ -71,13 +55,12 @@ main() async {
           "title": title,
           "text": text,
           "images": images
-        }
+        };
 
-        reviewsArray.add(reviewObj);
+        reviewsArray.add(reviewObj); // Заполняем массив отзывов объектами
       });
-      print(reviewsArray);
 
-      var productInfo = {
+      var productInfo = { // Собираем всю спарсенную информацию
         "name": name,
         "img": img,
         "rating": rating,
@@ -90,8 +73,8 @@ main() async {
         "reviews": reviewsArray
       };
 
-      print(productInfo);
+      print(productInfo); // Ну и посмотрим что там :)
     } else {
-      throw Exception();
+      throw Exception(); // Не подключились по ссылке - дропнули ошибку
     }
 }
