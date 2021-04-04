@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 main() async {
   final response =
-    await http.Client().get(Uri.parse('https://irecommend.ru/content/karamel-bayan-sulu-bs-fruitumelchennoi-formy-foto'));
+    await http.Client().get(Uri.parse('https://otzovik.com/reviews/brinza_serbskaya_serbskiy_dom/'));
     if (response.statusCode == 200) {
       var document = parse(response.body);
       var name = document.querySelector('[itemprop="name"]').innerHtml; // Название товара
