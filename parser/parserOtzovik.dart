@@ -14,12 +14,12 @@ main() async {
 
       var ratingCount = document.querySelector('.reviews-counter .votes').innerHtml; // Количество отзывов
 
-      var specsElem = document.querySelectorAll('.product-rating-details .rating-item');
-      var specs = [];
-      specsElem.forEach((element) {
-        var arr = element.attributes["title"].split(" ");
-        var name = arr[0].replaceAll(":", "");
-        specs.add({
+      var specsElem = document.querySelectorAll('.product-rating-details .rating-item'); // Все характеристики
+      var specs = []; // Массив характеристик
+      specsElem.forEach((element) { // Перебираем все характеристики
+        var arr = element.attributes["title"].split(" "); // Разбиваем тайтл, чтобы достать оценку и название характеристики
+        var name = arr[0].replaceAll(":", ""); // Забираем название характеристики и убираем двоеточие
+        specs.add({ // Зависываем в массив характеристику
           "name": name,
           "rate": arr[1]
         });
@@ -39,9 +39,9 @@ main() async {
 
           var title = review.querySelector(".review-title").innerHtml; // Заголовок отзыва
 
-          var textPlus = review.querySelector(".review-plus").innerHtml;
+          var textPlus = review.querySelector(".review-plus").innerHtml; // "Достоинства" продукта
 
-          var textMinus = review.querySelector(".review-minus").innerHtml;
+          var textMinus = review.querySelector(".review-minus").innerHtml; // "Недостатки продукта"
 
           var text = review.querySelector(".review-teaser").innerHtml; // Парсим данные отзыва
 
