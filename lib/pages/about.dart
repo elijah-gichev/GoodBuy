@@ -1,30 +1,12 @@
 import 'package:flutter/material.dart';
-
-import 'package:good_buy/funcs/QR.dart';
 import '../widgets/bottom_nav_bar.dart';
 
 class About extends StatefulWidget {
-  final String barcodeScanRes;
-  About(this.barcodeScanRes);
-
   @override
-  _AboutState createState() => _AboutState(barcodeScanRes);
+  _AboutState createState() => _AboutState();
 }
 
 class _AboutState extends State<About> {
-  String _product_name = 'Princess_Ksu';
-  double _cost = 100;
-
-  String _barcodeScanRes;
-  _AboutState(this._barcodeScanRes);
-
-  String _about_product1 =
-      "Конфеты Milka - это сочетание классического молочного шоколада и яркой карамели с миндалём. Очень вкусно и сладко.";
-  String _about_product2 =
-      "Конфеты сделаны из шоколада milka и именно это чувствуется первым делом. Сам шоколад очень вкусный и имеет насыщенный молочный вкус."
-      "Правда, он немного приторный, но при этом очень вкусный.\n"
-      "\nВнутри скорлупы находится тот же шоколадный крем, но красит его карамель, которая находится внутри";
-
   String _formatBarcodeText(String barcode) {
     int maxLength = 30;
     String res = barcode;
@@ -38,104 +20,165 @@ class _AboutState extends State<About> {
     return res;
   }
 
+  int _selectedIndex = 0;
+  void _selectedTab(int index) {
+    setState() {
+      _selectedIndex = index;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final String args = ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
-      backgroundColor: Color(0xffF0D6C4),
-      body: Center(
-        child: Column(children: [
-          Container(
-            margin: EdgeInsets.only(top: 45),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Color(0xffEFEAE3),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.3),
-                  blurRadius: 6,
-                  offset: Offset(0, 5),
-                )
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed('/scanner_page');
+        },
+        child: Icon(
+          Icons.qr_code_scanner_outlined,
+          color: Colors.green,
+        ),
+        elevation: 2.0,
+        backgroundColor: Colors.white,
+      ),
+      bottomNavigationBar: CustomBottomAppBar(
+        onTabSelected: _selectedTab,
+        items: [
+          CustomAppBarItem(icon: Icons.history),
+          CustomAppBarItem(icon: Icons.favorite),
+        ],
+      ),
+      body: ListView(
+        children: [
+          Card(
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                ListTile(
+                  leading: IconButton(
+                    icon: Icon(Icons.favorite),
+                    onPressed: () {},
+                  ),
+                  title: Text('Сыр Российский'),
+                  subtitle: Text(
+                    'Средняя оценка: 3.5',
+                    style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                  ),
+                  trailing: Text('2 отзыва'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Greyhound divisively hello coldly wonderfully marginally far upon excluding.',
+                    style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                  ),
+                ),
+                //пока непонятно, что делать с картинкой, пока их будет 2 в строке
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Image.asset(
+                      'assets/product_img_1.png',
+                      fit: BoxFit.scaleDown,
+                    ),
+                    Image.asset(
+                      'assets/product_img_2.png',
+                      fit: BoxFit.scaleDown,
+                    ),
+                    // Image.network(
+                    //     "https://i.otzovik.com/objects/b/870000/867684.png",)//нужен лоадер
+                  ],
+                ),
               ],
             ),
-            width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.8,
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: ListView(
-                children: [
-                  Row(
-                    children: [
-                      Image.asset('assets/product_logo.png'),
-                      Container(
-                        child: Column(
-                          children: [
-                            Text(
-                              _formatBarcodeText(_barcodeScanRes),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                  ),
-                                  Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                  ),
-                                  Icon(Icons.star),
-                                  Icon(Icons.star),
-                                  Icon(Icons.star)
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 20),
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Стоимость: $_cost рублей',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 15),
-                    child: Text(
-                      _about_product1,
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 15),
-                    child: Text(
-                      _about_product2,
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Image.asset('assets/product_img_1.png'),
-                        Image.asset('assets/product_img_2.png'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+          ),
+          //теперь будут идти карточки с отзывами
+          ReviewCard(
+            rate: 3.1,
+            title: args,
+          ),
+          ReviewCard(
+            rate: 2,
+            title: args,
+          ),
+          ReviewCard(
+            rate: 2.5,
+            title: args,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ReviewCard extends StatelessWidget {
+  final double rate;
+  final String title;
+  final String date = '06.01.2019';
+  final String description =
+      'Прогуливаясь в магазине Лента увидела в подарочном наборе сыр Камамбер. За два вида цена была 219 рублей. Второй сыр шел в подарок. Редко ем сыры в последнее время, в наших совсем разочаровалась. Но рискнула и...';
+
+  ReviewCard({
+    @required this.rate,
+    @required this.title,
+    //@required this.date,
+    //@required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          ListTile(
+            //leading: Icon(Icons.arrow_drop_down_circle),
+            title: Text(title ?? "null"),
+            subtitle: Text(
+              date,
+              style: TextStyle(color: Colors.black.withOpacity(0.6)),
+            ),
+            trailing: Text(
+              '$rate/5',
+              style: TextStyle(color: rate <= 3 ? Colors.red : Colors.green),
             ),
           ),
-        ]),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              description,
+              style: TextStyle(color: Colors.black.withOpacity(0.6)),
+            ),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.add_circle_outline,
+              color: Colors.green,
+              size: 30,
+            ),
+            title: Text('Цена и качество, да и вообще норм'),
+            subtitle: Text(
+              'Достоинства',
+              style: TextStyle(color: Colors.green.withOpacity(0.6)),
+            ),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.remove_circle_outline,
+              color: Colors.red,
+              size: 30,
+            ),
+            title: Text('Существование этого производителя и его продукции'),
+            subtitle: Text(
+              'Недостатки',
+              style: TextStyle(color: Colors.red.withOpacity(0.6)),
+            ),
+          ),
+        ],
       ),
-      bottomNavigationBar: BottomNavBar(),
     );
   }
 }
