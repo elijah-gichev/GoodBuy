@@ -1,52 +1,92 @@
 import 'package:flutter/material.dart';
-import '../funcs/QR.dart';
+import 'package:flutter/rendering.dart';
 
-class BottomNavBar extends StatefulWidget {
+class MyBottomBar extends StatefulWidget {
   @override
-  _BottomNavBarState createState() => _BottomNavBarState();
+  _MyBottomBarState createState() => _MyBottomBarState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
+class _MyBottomBarState extends State<MyBottomBar> {
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: Color(0xffF0D6C4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          IconButton(
-            padding: EdgeInsets.all(0),
-            icon: Icon(
-              Icons.history,
-              size: 35,
-            ),
-            onPressed: () {
-              //Navigator.pop(context);
-            },
-          ),
-          Expanded(
-            child: IconButton(
-              padding: EdgeInsets.only(right: 10),
-              icon: Icon(
-                Icons.qr_code_scanner,
-                size: 35,
-              ),
-              onPressed: () async {
-                String barcodeScanRes = await scanBarcodeNormal();
+    return Container();
+  }
+}
 
-                toFindedPage(barcodeScanRes, context);
-                // setState(() {
-                //   _barcodeScanRes = barcodeScanRes;
-                // });
-              },
+//функционал для создания кастомных bottomBar
+class CustomAppBarItem {
+  IconData icon;
+  bool hasNotification;
+
+  CustomAppBarItem({@required this.icon, this.hasNotification});
+}
+
+class CustomBottomAppBar extends StatefulWidget {
+  final ValueChanged<int> onTabSelected;
+  final List<CustomAppBarItem> items;
+
+  CustomBottomAppBar({@required this.onTabSelected, @required this.items});
+
+  @override
+  _CustomBottomAppBarState createState() => _CustomBottomAppBarState();
+}
+
+class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
+  int _selectedIndex = 0;
+
+  void _updateIndex(int index) {
+    widget.onTabSelected(index);
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  Widget _buildTabIcon(
+      {int index, CustomAppBarItem item, ValueChanged<int> onPressed}) {
+    return Container(
+      child: SizedBox(
+        height: 60,
+        width: 60,
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            onTap: () => onPressed(index),
+            child: Icon(
+              item.icon,
+              color: _selectedIndex == index ? Colors.green : Colors.grey,
+              size: 24,
             ),
           ),
-          SizedBox(
-            width: 35,
-            height: 35,
-          )
-        ],
+        ),
       ),
+      padding: EdgeInsets.symmetric(horizontal: 10),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> items = List.generate(
+      widget.items.length,
+      (int index) {
+        return _buildTabIcon(
+          index: index,
+          item: widget.items[index],
+          onPressed: _updateIndex,
+        );
+      },
+    );
+
+    return BottomAppBar(
+      child: Container(
+        height: 50.0,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: items,
+        ),
+      ),
+      shape: CircularNotchedRectangle(),
+      color: Colors.white,
     );
   }
 }
