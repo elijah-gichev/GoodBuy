@@ -6,58 +6,58 @@ main() async {
     await http.Client().get(Uri.parse('https://otzovik.com/reviews/brinza_serbskaya_serbskiy_dom/'));
     if (response.statusCode == 200) {
       var document = parse(response.body);
-      var name = document.querySelector('[itemprop="name"]').innerHtml; // Название товара
+      var name = document.querySelector('.product-name [itemprop="name"]').innerHtml; // Название товара
 
-      var img = document.querySelector(".productHeaderContent img").attributes["src"];
+      var img = document.querySelector('.product-photo [itemprop="image"]').attributes["src"];
 
-      var rating = document.querySelector('[itemprop="ratingValue"]').innerHtml; // Рейтинг товара
+      var rating = document.querySelector('.recommend-ratio span').innerHtml; // Рейтинг товара
 
-      var ratingCount = document.querySelector('[itemprop="reviewCount"]').innerHtml; // Количество отзывов
+      var ratingCount = document.querySelector('.reviews-counter .votes').innerHtml; // Количество отзывов
 
-      var likes = document.querySelector('.RecommendRating-like span').innerHtml; // Лайки
+      var specsElem = document.querySelectorAll('.product-rating-details .rating-item');
+      var specs = [];
+      specsElem.forEach((element) {
+        var arr = element.attributes["title"].split(" ");
+        var name = arr[0].replaceAll(":", "");
+        specs.add({
+          "name": name,
+          "rate": arr[1]
+        });
+      });
 
-      var dislikes = document.querySelector('.RecommendRating-dislike span').innerHtml; // Дизайки
-
-      var description = document.querySelectorAll('[itemprop="description"] div'); // Парсим все описание
-      var category = description[0].getElementsByTagName("a")[0].innerHtml; // Категория
-      var brand = description[1].getElementsByTagName("a")[0].innerHtml; // Бренд
-      var type = description[2].getElementsByTagName("a")[0].innerHtml; // Тип
-
-      var reviews = document.querySelector(".list-comments"); // Парсим лист отзывов
+      var reviews = document.querySelector(".otz_product_reviews_left .review-list-2"); // Парсим лист отзывов
       var reviewsArray = []; // Массив отзывов
       reviews.children.forEach((review) {
-        var stars = review.querySelectorAll(".starsRating .star .on").length; // Сколько звезд поставил автор отзыва
+        if (review.attributes["class"] != "otz_panel_inpage") {
+          var stars = review.querySelectorAll(".icon-star-1").length; // Сколько звезд поставил автор отзыва
 
-        var author = review.querySelector(".authorName a").innerHtml; // Ник автора отзыва
+          var author = review.querySelector('.user-login span').innerHtml; // Ник автора отзыва
+          
+          var authorImage = review.querySelector(".avatar img").attributes["data-original"]; // Аватарка автора отзыва
 
-        var authorImage = review.querySelector(".authorPhoto img").attributes["data-original"]; // Аватарка автора отзыва
+          var date = review.querySelector(".review-postdate span").innerHtml; // Дата написания отзыва
 
-        var date = review.querySelector(".created").innerHtml; // Дата написания отзыва
+          var title = review.querySelector(".review-title").innerHtml; // Заголовок отзыва
 
-        var title = review.querySelector(".reviewTitle a").innerHtml; // Заголовок отзыва
+          var textPlus = review.querySelector(".review-plus").innerHtml;
 
-        var textElem = review.querySelector(".reviewTextSnippet"); // Парсим данные отзыва
-        textElem.querySelectorAll("div, a").forEach((element) {element.remove();}); // Удаляем лишние элементы
-        var text = textElem.innerHtml; // Забираем текст отзыва
-        text = text.replaceAll("&nbsp;", ""); // Из текста выпиливаем html entity "неразрывный пробел"
-        text = text.split(" ").where((element) => element != "").skip(2).join(" "); // Убираем пробелы и пустую строку
-        // Получаем текст отзыва
+          var textMinus = review.querySelector(".review-minus").innerHtml;
 
-        var imagesElems = review.querySelectorAll(".review-previews-imgs-items a img"); // Забираем все картинки
-        var images = []; // Массив для сбора ссылок на картинки отзыва
-        imagesElems.forEach((element) {images.add(element.attributes["data-original"]);}); // Записываем ссылки на картинки из отзыва
+          var text = review.querySelector(".review-teaser").innerHtml; // Парсим данные отзыва
 
-        var reviewObj = { // Все данные собираем в объект
-          "author": author,
-          "stars": stars,
-          "authorImage": authorImage,
-          "date": date,
-          "title": title,
-          "text": text,
-          "images": images
-        };
+          var reviewObj = { // Все данные собираем в объект
+            "author": author,
+            "stars": stars,
+            "authorImage": authorImage,
+            "date": date,
+            "title": title,
+            "textPlus": textPlus,
+            "textMinus": textMinus,
+            "text": text
+          };
 
-        reviewsArray.add(reviewObj); // Заполняем массив отзывов объектами
+          reviewsArray.add(reviewObj); // Заполняем массив отзывов объектами
+        }
       });
 
       var productInfo = { // Собираем всю спарсенную информацию
@@ -65,11 +65,7 @@ main() async {
         "img": img,
         "rating": rating,
         "ratingCount": ratingCount,
-        "likes": likes,
-        "dislikes": dislikes,
-        "category": category,
-        "brand": brand,
-        "type": type,
+        "specs": specs,
         "reviews": reviewsArray
       };
 
