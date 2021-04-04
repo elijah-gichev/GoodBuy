@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-import 'about.dart';
-import '../funcs/QR.dart';
 
 class FirstPage extends StatelessWidget {
   @override
@@ -10,11 +6,10 @@ class FirstPage extends StatelessWidget {
     //To switch the screen to home after 3 seconds
     //in the future will be used to wait for loading
     Future.delayed(Duration(seconds: 3), () async {
-      String barcodeScanRes = await scanBarcodeNormal();
-      toFindedPage(barcodeScanRes, context);
-      //print('barcodeScanRes: $barcodeScanRes');
-      // Navigator.push(context,
-      //     MaterialPageRoute(builder: (context) => About(barcodeScanRes)));
+      // String barcodeScanRes = await scanBarcodeNormal();
+      // toFindedPage(barcodeScanRes, context);
+
+      Navigator.of(context).pushNamed('/scanner_page');
     });
 
     return Scaffold(
@@ -23,17 +18,7 @@ class FirstPage extends StatelessWidget {
         bottomOpacity: 0.0,
         elevation: 0.0,
         actions: [
-          // IconButton(
-          //   icon: Icon(
-          //     Icons.keyboard_arrow_right,
-          //     size: 35,
-          //   ),
-          //   //пока не нужный функционал
-          //   // onPressed: () {
-          //   //   Navigator.push(context,
-          //   //       MaterialPageRoute(builder: (context) => QRScanner()));
-          //   // },
-          // ),
+          //
         ],
       ),
       backgroundColor: Colors.white,
