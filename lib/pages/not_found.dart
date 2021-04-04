@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:good_buy/widgets/bottom_nav_bar.dart';
 
-import '../funcs/QR.dart';
+//import '../funcs/QR.dart';
 
 class NotFound extends StatelessWidget {
   @override
