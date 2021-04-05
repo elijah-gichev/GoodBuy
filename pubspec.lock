@@ -95,8 +95,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
-<<<<<<< HEAD
-=======
   native_device_orientation:
     dependency: transitive
     description:
@@ -104,7 +102,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.3"
->>>>>>> master
   path:
     dependency: transitive
     description:
@@ -112,8 +109,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
-<<<<<<< HEAD
-=======
   qr_mobile_vision:
     dependency: "direct main"
     description:
@@ -121,7 +116,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
->>>>>>> master
   sky_engine:
     dependency: transitive
     description: flutter
@@ -185,8 +179,4 @@ packages:
     version: "2.1.0"
 sdks:
   dart: ">=2.12.0-0.0 <3.0.0"
-<<<<<<< HEAD
-  flutter: ">=1.12.13+hotfix.5"
-=======
   flutter: ">=1.17.0"
->>>>>>> master
