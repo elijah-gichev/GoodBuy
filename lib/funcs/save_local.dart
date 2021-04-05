@@ -7,10 +7,16 @@ Future<void> saveDataLocal(String title, double stars, String img, int reviews, 
   final prefs = await SharedPreferences.getInstance();
 
   final historyItems = prefs.getString('history_items') ?? '[]';
-  // set value
-  // prefs.setInt('counter', counter);
 
   var historyItemsArr = jsonDecode(historyItems);
+
+  var ok = true;
+  historyItemsArr.forEach( (element) => {
+    if (element["qr"] == qr) {
+      ok = false
+    }
+  });
+  if (!ok) return;
 
   historyItemsArr.add({
     "title": title,
