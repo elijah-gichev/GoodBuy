@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/bottom_nav_bar.dart';
+import '../widgets/scan_fab.dart';
 
 class HistoryPage extends StatefulWidget {
   @override
@@ -28,23 +29,13 @@ class _HistoryPageState extends State<HistoryPage> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed('/scanner_page');
-        },
-        child: Icon(
-          Icons.qr_code_scanner_outlined,
-          color: Colors.green,
-        ),
-        elevation: 2.0,
-        backgroundColor: Colors.white,
-      ),
+      floatingActionButton: ScanFAB(),
       bottomNavigationBar: CustomBottomAppBar(
-        onTabSelected: _selectedTab,
         items: [
           CustomAppBarItem(icon: Icons.history),
           CustomAppBarItem(icon: Icons.favorite),
         ],
+        selectedIndex: 0,
       ),
     );
   }

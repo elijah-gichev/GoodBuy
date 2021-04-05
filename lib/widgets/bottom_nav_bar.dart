@@ -1,18 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-class MyBottomBar extends StatefulWidget {
-  @override
-  _MyBottomBarState createState() => _MyBottomBarState();
-}
-
-class _MyBottomBarState extends State<MyBottomBar> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
 //функционал для создания кастомных bottomBar
 class CustomAppBarItem {
   IconData icon;
@@ -22,23 +10,30 @@ class CustomAppBarItem {
 }
 
 class CustomBottomAppBar extends StatefulWidget {
-  final ValueChanged<int> onTabSelected;
+  //final ValueChanged<int> onTabSelected;
   final List<CustomAppBarItem> items;
+  int selectedIndex;
 
-  CustomBottomAppBar({@required this.onTabSelected, @required this.items});
+  CustomBottomAppBar({@required this.items, @required this.selectedIndex});
 
   @override
   _CustomBottomAppBarState createState() => _CustomBottomAppBarState();
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
-  int _selectedIndex = 0;
+  void _selectedTab(int index) {
+    //_selectedIndex = index;
+    if (index == 0)
+      Navigator.pushNamed(context, '/history');
+    else if (index == 1) Navigator.pushNamed(context, '/not_found');
+  }
 
   void _updateIndex(int index) {
-    widget.onTabSelected(index);
-    setState(() {
-      _selectedIndex = index;
-    });
+    //widget.onTabSelected(index);
+    _selectedTab(index);
+    // setState(() {
+    //   _selectedIndex = index;
+    // });
   }
 
   Widget _buildTabIcon(
@@ -53,7 +48,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
             onTap: () => onPressed(index),
             child: Icon(
               item.icon,
-              color: _selectedIndex == index ? Colors.green : Colors.grey,
+              color: widget.selectedIndex == index ? Colors.green : Colors.grey,
               size: 24,
             ),
           ),
