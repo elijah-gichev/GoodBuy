@@ -1,12 +1,19 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<Object> getReviewsLocal() async{
+Future<Object> getFavouritesProductsLocal() async{
   final prefs = await SharedPreferences.getInstance();
 
   final historyItems = prefs.getString('history_items') ?? '[]';
 
   var historyItemsArr = jsonDecode(historyItems);
 
-  return historyItemsArr;
+  var findData = [];
+  historyItemsArr.forEach( (element) => {
+    if (element["isFavourite"] != null && element["isFavourite"]) {
+      findData.add(element)
+    }
+  });
+
+  return findData;
 }

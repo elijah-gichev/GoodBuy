@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> saveReviewLocal(String title, double stars, String img, int reviews, String qr, [bool isFavourite = false]) async{
+Future<void> saveProductLocal(String title, double stars, String img, int reviews, String qr, [bool isFavourite = false]) async{
   if (title == "" || stars < 0 || img == "" || reviews < 0 || qr == "") return;
 
   final prefs = await SharedPreferences.getInstance();
