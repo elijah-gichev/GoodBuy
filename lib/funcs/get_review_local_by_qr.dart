@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<Object> getDataLocalByQr(String qr) async{
+Future<Object> getReviewLocalByQr(String qr) async{
   if (qr == "") return {};
   final prefs = await SharedPreferences.getInstance();
 
