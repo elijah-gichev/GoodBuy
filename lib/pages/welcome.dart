@@ -3,15 +3,6 @@ import 'package:flutter/material.dart';
 class FirstPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //To switch the screen to home after 3 seconds
-    //in the future will be used to wait for loading
-    Future.delayed(Duration(seconds: 3), () async {
-      // String barcodeScanRes = await scanBarcodeNormal();
-      // toFindedPage(barcodeScanRes, context);
-
-      Navigator.of(context).pushNamed('/scanner_page');
-    });
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -39,16 +30,16 @@ class FirstPage extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          padding: EdgeInsets.all(10),
-          child: Text(
-            'tusovka dev.',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Color.fromARGB(100, 0, 0, 0)),
-          ),
-        ),
-      ),
+      // bottomNavigationBar: BottomAppBar(
+      //   child: Container(
+      //     padding: EdgeInsets.all(10),
+      //     child: Text(
+      //       'tusovka dev.',
+      //       textAlign: TextAlign.center,
+      //       style: TextStyle(color: Color.fromARGB(100, 0, 0, 0)),
+      //     ),
+      //   ),
+      // ),
     );
   }
 }

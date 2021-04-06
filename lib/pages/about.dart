@@ -25,6 +25,8 @@ class _AboutState extends State<About> {
   Widget build(BuildContext context) {
     final String args = ModalRoute.of(context).settings.arguments;
 
+    print(args);
+
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: ScanFAB(),

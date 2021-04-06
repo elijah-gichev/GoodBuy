@@ -22,11 +22,11 @@ class MyApp extends StatelessWidget {
       ),
       title: "GoodBuy",
       routes: {
-        '/': (context) =>
+        '/logo': (context) =>
             FirstPage(), //используется для корневой домашней папки вместо параметра home
         //'/about': (context) => About(),
         //'/not_found': (context) => NotFound(),
-        '/scanner_page': (context) => ScannerPage(),
+        '/': (context) => ScannerPage(),
         //'/history': (context) => HistoryPage(),
       },
       onGenerateRoute: (settings) {

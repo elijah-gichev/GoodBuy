@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../widgets/bottom_nav_bar.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
 import 'package:qr_mobile_vision/qr_mobile_vision.dart';
+import 'welcome.dart';
 
 class ScannerPage extends StatefulWidget {
   @override
@@ -65,9 +66,12 @@ class _ScannerPageState extends State<ScannerPage> {
                     //срабатывает, когда сосканирован код
                     setState(() {
                       //Navigator.of(context).pushNamed('/about', arguments: code);
-                      qr = code;
+                      qr = code ?? 'not null';
                       print(code);
                     });
+                  },
+                  notStartedBuilder: (context) {
+                    return FirstPage();
                   },
                   child: Center(
                     child: Column(
