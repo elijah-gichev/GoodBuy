@@ -10,7 +10,7 @@ class _ScanFABState extends State<ScanFAB> {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        Navigator.of(context).pushNamed('/scanner_page');
+        Navigator.of(context).pushNamed('/');
       },
       child: Icon(
         Icons.qr_code_scanner_outlined,
