@@ -3,40 +3,39 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/scan_fab.dart';
-import '../bloc/history/history_bloc.dart';
+import '../bloc/favourite/favourite_bloc.dart';
 
-import '../funcs/pref_helper/get_products_local.dart';
-
-class HistoryPage extends StatefulWidget {
+class FavouritePage extends StatefulWidget {
   @override
-  _HistoryPageState createState() => _HistoryPageState();
+  _FavouritePageState createState() => _FavouritePageState();
 }
 
-class _HistoryPageState extends State<HistoryPage> {
+class _FavouritePageState extends State<FavouritePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HistoryBloc(),
-      child: HistoryPageBody(),
+      create: (context) => FavouriteBloc(),
+      child: FavouritePageBody(),
     );
   }
 }
 
-class HistoryPageBody extends StatefulWidget {
+class FavouritePageBody extends StatefulWidget {
   @override
-  _HistoryPageBodyState createState() => _HistoryPageBodyState();
+  _FavouritePageBodyState createState() => _FavouritePageBodyState();
 }
 
-class _HistoryPageBodyState extends State<HistoryPageBody> {
+class _FavouritePageBodyState extends State<FavouritePageBody> {
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(milliseconds: 500), () {
-      context.read<HistoryBloc>().add(HistoryLoaded());
+      context.read<FavouriteBloc>().add(FavouriteLoaded());
     });
 
     return Scaffold(
-      body: BlocBuilder<HistoryBloc, HistoryState>(builder: (context, state) {
-        if (state is HistoryLoadSuccess) {
+      body:
+          BlocBuilder<FavouriteBloc, FavouriteState>(builder: (context, state) {
+        if (state is FavouriteLoadSuccess) {
           return SafeArea(
             child: ListView.builder(
               padding: const EdgeInsets.all(8),
@@ -53,7 +52,7 @@ class _HistoryPageBodyState extends State<HistoryPageBody> {
             ),
           );
         }
-        if (state is HistoryEmpty) {
+        if (state is FavouriteEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,7 +86,7 @@ class _HistoryPageBodyState extends State<HistoryPageBody> {
             ),
           );
         }
-        if (state is HistoryInitial) {
+        if (state is FavouriteInitial) {
           return Center(
             child: CircularProgressIndicator(
               backgroundColor: Colors.green,
@@ -102,17 +101,11 @@ class _HistoryPageBodyState extends State<HistoryPageBody> {
           CustomAppBarItem(icon: Icons.history),
           CustomAppBarItem(icon: Icons.favorite),
         ],
-        selectedIndex: 0,
+        selectedIndex: 1,
       ),
     );
   }
 }
-
-// final String title;
-//   final double stars;
-//   final String imgUrl;
-//   final int reviews;
-//   final String qr;
 
 class HistoryCard extends StatelessWidget {
   final String title;

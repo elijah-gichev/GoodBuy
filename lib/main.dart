@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 
 import 'pages/welcome.dart';
+import 'pages/favourite.dart';
 import 'pages/not_found.dart';
 import 'pages/about.dart';
 import 'pages/scanner_page.dart';
 import 'pages/history.dart';
 
 import 'package:page_transition/page_transition.dart';
+import 'package:bloc/bloc.dart';
 
-void main() => runApp(MyApp());
+import 'bloc/about/about_bloc.dart';
+
+void main() {
+  Bloc.observer = SimpleBlocObserver();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -26,7 +33,7 @@ class MyApp extends StatelessWidget {
             FirstPage(), //используется для корневой домашней папки вместо параметра home
         //'/about': (context) => About(),
         //'/not_found': (context) => NotFound(),
-        '/': (context) => ScannerPage(),
+        //'/': (context) => ScannerPage(),
         //'/history': (context) => HistoryPage(),
       },
       onGenerateRoute: (settings) {
@@ -34,21 +41,29 @@ class MyApp extends StatelessWidget {
           case '/about':
             return PageTransition(
               child: About(),
-              type: PageTransitionType.rotate,
-              duration: Duration(seconds: 1),
+              type: PageTransitionType.rightToLeft,
+              duration: Duration(milliseconds: 500),
+              settings: settings,
+            );
+            break;
+          case '/':
+            return PageTransition(
+              child: ScannerPage(),
+              type: PageTransitionType.rightToLeft,
+              duration: Duration(milliseconds: 500),
             );
             break;
           case '/history':
             return PageTransition(
               child: HistoryPage(),
-              type: PageTransitionType.rotate,
+              type: PageTransitionType.leftToRight,
               duration: Duration(milliseconds: 500),
             );
             break;
-          case '/not_found':
+          case '/favourite':
             return PageTransition(
-              child: NotFound(),
-              type: PageTransitionType.rotate,
+              child: FavouritePage(),
+              type: PageTransitionType.leftToRight,
               duration: Duration(milliseconds: 500),
             );
             break;

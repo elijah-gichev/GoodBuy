@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../widgets/bottom_nav_bar.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
@@ -37,10 +38,17 @@ class _ScannerPageState extends State<ScannerPage> {
           setState(() {
             camState = !camState;
           });
+          //context.read<AboutBloc>().add(AboutStarted());
+          //save data
+          //saveProductLocal("title1", 3.5, "img_url", 5, "111111");
 
           QrMobileVision.stop();
-          if (!camState)
-            Navigator.of(context).pushNamed('/about', arguments: qr);
+          if (!camState) {
+            Navigator.of(context).pushNamed(
+              '/about',
+              arguments: qr,
+            );
+          }
         },
         child: Icon(
           camState
@@ -65,7 +73,6 @@ class _ScannerPageState extends State<ScannerPage> {
                     //одна из самых важных частей
                     //срабатывает, когда сосканирован код
                     setState(() {
-                      //Navigator.of(context).pushNamed('/about', arguments: code);
                       qr = code ?? 'not null';
                       print(code);
                     });

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/scan_fab.dart';
+
+import '../funcs/pref_helper/get_products_local.dart';
+import '../funcs/pref_helper/save_product_local.dart';
+import '../bloc/about/about_bloc.dart';
 
 class About extends StatefulWidget {
   @override
@@ -8,24 +13,30 @@ class About extends StatefulWidget {
 }
 
 class _AboutState extends State<About> {
-  String _formatBarcodeText(String barcode) {
-    int maxLength = 30;
-    String res = barcode;
-    if (barcode == null) {
-      res = 'null';
-    }
-
-    if (barcode.length > maxLength) {
-      res = barcode.substring(0, maxLength) + '...';
-    }
-    return res;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final String args = ModalRoute.of(context).settings.arguments;
+    return BlocProvider(
+      create: (context) => AboutBloc(),
+      child: AboutBody(),
+    );
+  }
+}
 
-    print(args);
+class AboutBody extends StatefulWidget {
+  @override
+  _AboutBodyState createState() => _AboutBodyState();
+}
+
+class _AboutBodyState extends State<AboutBody> {
+  @override
+  Widget build(BuildContext context) {
+    final String qr = ModalRoute.of(context).settings.arguments;
+
+    //here must be loading data from Internet
+    Future.delayed(const Duration(milliseconds: 500), () {
+      context.read<AboutBloc>().add(AboutLoaded());
+    });
+    saveProductLocal("title1", 3.5, "img_url", 5, qr, true);
 
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -37,64 +48,86 @@ class _AboutState extends State<About> {
         ],
         selectedIndex: 2,
       ),
-      body: ListView(
-        children: [
-          Card(
-            clipBehavior: Clip.antiAlias,
-            child: Column(
+      body: BlocBuilder<AboutBloc, AboutState>(
+        builder: (context, state) {
+          if (state is AboutInitial) {
+            return Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
+          if (state is AboutLoadSuccess) {
+            return ListView(
               children: [
-                ListTile(
-                  leading: IconButton(
-                    icon: Icon(Icons.favorite),
-                    onPressed: () {},
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: IconButton(
+                          icon: Icon(Icons.favorite),
+                          onPressed: () {},
+                        ),
+                        title: Text('Сыр Российский'),
+                        subtitle: Text(
+                          'Средняя оценка: 3.5',
+                          style:
+                              TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                        trailing: Text('2 отзыва'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'Greyhound divisively hello coldly wonderfully marginally far upon excluding.',
+                          style:
+                              TextStyle(color: Colors.black.withOpacity(0.6)),
+                        ),
+                      ),
+                      //пока непонятно, что делать с картинкой, пока их будет 2 в строке
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Image.asset(
+                            'assets/product_img_1.png',
+                            fit: BoxFit.scaleDown,
+                          ),
+                          Image.asset(
+                            'assets/product_img_2.png',
+                            fit: BoxFit.scaleDown,
+                          ),
+                          // Image.network(
+                          //     "https://i.otzovik.com/objects/b/870000/867684.png",)//нужен лоадер
+                        ],
+                      ),
+                    ],
                   ),
-                  title: Text('Сыр Российский'),
-                  subtitle: Text(
-                    'Средняя оценка: 3.5',
-                    style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                  ),
-                  trailing: Text('2 отзыва'),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Greyhound divisively hello coldly wonderfully marginally far upon excluding.',
-                    style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                  ),
+                //теперь будут идти карточки с отзывами
+                ReviewCard(
+                  rate: 3.1,
+                  title: "args",
                 ),
-                //пока непонятно, что делать с картинкой, пока их будет 2 в строке
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Image.asset(
-                      'assets/product_img_1.png',
-                      fit: BoxFit.scaleDown,
-                    ),
-                    Image.asset(
-                      'assets/product_img_2.png',
-                      fit: BoxFit.scaleDown,
-                    ),
-                    // Image.network(
-                    //     "https://i.otzovik.com/objects/b/870000/867684.png",)//нужен лоадер
-                  ],
+                ReviewCard(
+                  rate: 2,
+                  title: "args",
+                ),
+                ReviewCard(
+                  rate: 2.5,
+                  title: "args",
                 ),
               ],
-            ),
-          ),
-          //теперь будут идти карточки с отзывами
-          ReviewCard(
-            rate: 3.1,
-            title: args,
-          ),
-          ReviewCard(
-            rate: 2,
-            title: args,
-          ),
-          ReviewCard(
-            rate: 2.5,
-            title: args,
-          ),
-        ],
+            );
+          }
+          if (state is AboutLoadFailure) {
+            return Center(
+              child: Container(
+                child: Text("Failure"),
+              ),
+            );
+          }
+        },
       ),
     );
   }

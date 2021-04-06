@@ -10,7 +10,6 @@ class NotFound extends StatelessWidget {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: ScanFAB(),
-      backgroundColor: Color(0xffF0D6C4),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -30,6 +29,7 @@ class NotFound extends StatelessWidget {
                 ';(',
                 style: TextStyle(
                   fontSize: 144,
+                  color: Colors.green,
                 ),
               ),
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:qr_mobile_vision/qr_mobile_vision.dart';
 
 //функционал для создания кастомных bottomBar
 class CustomAppBarItem {
@@ -23,9 +24,13 @@ class CustomBottomAppBar extends StatefulWidget {
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
   void _selectedTab(int index) {
     //_selectedIndex = index;
-    if (index == 0)
+    if (index == 0) {
       Navigator.pushNamed(context, '/history');
-    else if (index == 1) Navigator.pushNamed(context, '/not_found');
+      QrMobileVision.stop();
+    } else if (index == 1) {
+      Navigator.pushNamed(context, '/favourite');
+      QrMobileVision.stop();
+    }
   }
 
   void _updateIndex(int index) {
