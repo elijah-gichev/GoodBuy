@@ -51,6 +51,7 @@ class AboutBloc extends Bloc<AboutEvent, AboutState> {
               await rep.getAllDataThatMeetsRequirements(event.qr);
           yield AboutLoadSuccess(fullProductInfo: fullProductInfo);
         } on NotFoundException {
+          startTimestamp -= 20;
           yield AboutNotFound();
         } catch (error) {
           print(error);
