@@ -65,6 +65,38 @@ class _AboutBodyState extends State<AboutBody> {
               ),
             );
           }
+          if (state is AboutNotFound) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Text(
+                      'Данный товар не найден!',
+                      style: TextStyle(
+                        fontSize: 24,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Text(
+                      ';(',
+                      style: TextStyle(
+                        fontSize: 144,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 35,
+                    height: 35,
+                  )
+                ],
+              ),
+            );
+          }
           if (state is AboutNextScanNotAllowed) {
             return Center(
               child: Container(
@@ -74,7 +106,7 @@ class _AboutBodyState extends State<AboutBody> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "Следующее сканирование будет доступно в течение 15 секунд!",
+                      "Следующее сканирование будет доступно в течение 20 секунд!",
                       style: TextStyle(color: Colors.green),
                     ),
                     SizedBox(
@@ -83,7 +115,7 @@ class _AboutBodyState extends State<AboutBody> {
                     Row(
                       children: [
                         Text(
-                          "Через 15с нажмите на кнопку",
+                          "Через 20с нажмите на кнопку",
                           style: TextStyle(color: Colors.green),
                         ),
                         Icon(
@@ -152,10 +184,6 @@ class _AboutBodyState extends State<AboutBody> {
                                 color: isFavorite ? Colors.red : Colors.grey,
                               ),
                               onPressed: () {
-                                // print("main simestamp: $startTimestamp");
-                                // print(getTimestamp());
-                                //state.fullProductInfo.
-
                                 setFavouriteFlagByQr(widget.qr, true);
                                 setState(() {
                                   isFavorite = true;
@@ -175,7 +203,7 @@ class _AboutBodyState extends State<AboutBody> {
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            'Greyhound divisively hello coldly wonderfully marginally far upon excluding.',
+                            '---------',
                             style:
                                 TextStyle(color: Colors.black.withOpacity(0.6)),
                           ),
@@ -248,12 +276,6 @@ class _AboutBodyState extends State<AboutBody> {
 }
 
 class ReviewCard extends StatelessWidget {
-  // final double rate;
-  // final String title;
-  // final String date = '06.01.2019';
-  // final String description =
-  //     'Прогуливаясь в магазине Лента увидела в подарочном наборе сыр Камамбер. За два вида цена была 219 рублей. Второй сыр шел в подарок. Редко ем сыры в последнее время, в наших совсем разочаровалась. Но рискнула и...';
-
   final Review review;
   ReviewCard({
     @required this.review,

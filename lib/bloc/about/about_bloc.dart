@@ -39,7 +39,7 @@ class AboutBloc extends Bloc<AboutEvent, AboutState> {
   ) async* {
     bool hasInternet = await checkInternet();
 
-    if (isNextScanAllowed(10)) {
+    if (isNextScanAllowed(20)) {
       if (!hasInternet) {
         print("NO IE");
         yield AboutNoIEConnection();
@@ -50,6 +50,8 @@ class AboutBloc extends Bloc<AboutEvent, AboutState> {
           FullProductInfo fullProductInfo =
               await rep.getAllDataThatMeetsRequirements(event.qr);
           yield AboutLoadSuccess(fullProductInfo: fullProductInfo);
+        } on NotFoundException {
+          yield AboutNotFound();
         } catch (error) {
           print(error);
           yield AboutLoadFailure();

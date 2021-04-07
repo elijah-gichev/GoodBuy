@@ -33,6 +33,10 @@ class Repository {
   }
 }
 
+class NotFoundException implements Exception {
+  String errMsg() => 'product not found in the DB';
+}
+
 class LinkProvider {
   Future<FetchedLink> readData(String qr) async {
     final response = await http.Client()
@@ -41,19 +45,19 @@ class LinkProvider {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
 
-      // print(data['id'].toString());
-      // print(data['name'] is String);
-      // print(data['link'] is String);
-      // print(data['createdDate'] is String);
       return FetchedLink(
           id: data['id'].toString(),
           name: data['name'],
           link: data['link'],
           createdDate: data['createdDate']);
     } else {
-      throw Exception('error fetching posts');
+      throw NotFoundException();
     }
   }
+}
+
+class SomethingWrongWithOtzovikException implements Exception {
+  String errMsg() => 'Something Wrong With Otzovik';
 }
 
 class ProductReviewsProvider {
@@ -162,9 +166,7 @@ class ProductReviewsProvider {
           countRating: ratingCount,
           reviews: reviewsList);
     } else {
-      print("parse exception");
-      throw Exception(); // Не подключились по ссылке - дропнули ошибку
-
+      throw SomethingWrongWithOtzovikException(); // Не подключились по ссылке - дропнули ошибку
     }
   }
 
