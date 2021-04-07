@@ -69,7 +69,7 @@ namespace ExcelParser
                 {
                     // Print columns A and C, which correspond to indices 0 and 2.
                     // We also need to escape some characters in Name column.
-                    Console.WriteLine($"new Entry {{ID = { row[1]}, Name = \"{row[0].ToString().Escape()}\", Link = \"{ row[2]}\"}},");
+                    Console.WriteLine($"new Entry {{ID = { row[1]}, Name = "{row[0].ToString().Escape()}", Link = \"{ row[2]}\"}},");
                 }
                 Console.WriteLine("};");
             }
