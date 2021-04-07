@@ -29,13 +29,21 @@ class AboutBody extends StatefulWidget {
 
 class _AboutBodyState extends State<AboutBody> {
   @override
+  void initState() {
+    super.initState();
+    context.read<AboutBloc>().add(AboutStarted());
+  }
+
+  @override
   Widget build(BuildContext context) {
     final String qr = ModalRoute.of(context).settings.arguments;
 
     //here must be loading data from Internet
-    Future.delayed(const Duration(milliseconds: 500), () {
-      context.read<AboutBloc>().add(AboutLoaded());
-    });
+    // Future.delayed(const Duration(milliseconds: 500), () {
+    //   context.read<AboutBloc>().add(AboutLoaded());
+    // });
+    //_fetchLink("");
+
     saveProductLocal("title1", 3.5, "img_url", 5, qr, true);
 
     return Scaffold(
@@ -66,9 +74,9 @@ class _AboutBodyState extends State<AboutBody> {
                     children: [
                       ListTile(
                         leading: IconButton(
-                          icon: Icon(Icons.favorite),
-                          onPressed: () {},
-                        ),
+                            icon: Icon(Icons.favorite),
+                            onPressed: () {} //добавить в избранное},
+                            ),
                         title: Text('Сыр Российский'),
                         subtitle: Text(
                           'Средняя оценка: 3.5',

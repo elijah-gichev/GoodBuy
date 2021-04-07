@@ -1,7 +1,7 @@
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 
-main() async {
+getFullInfo() async {
   final response = await http.Client().get(
       Uri.parse('https://otzovik.com/reviews/brinza_serbskaya_serbskiy_dom/'));
   if (response.statusCode == 200) {
@@ -18,6 +18,8 @@ main() async {
         .querySelector('.recommend-ratio span')
         .innerHtml; // Рейтинг товара
 
+    // print("rating: $rating");
+    //var rating = item.querySelectorAll('.product-rating')[0].getAttribute('title').replace('Общий рейтинг: ', '');
     var ratingCount = document
         .querySelector('.reviews-counter .votes')
         .innerHtml; // Количество отзывов
