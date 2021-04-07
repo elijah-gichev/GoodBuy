@@ -1,0 +1,62 @@
+﻿@using System.Runtime.CompilerServices
+@model IEnumerable<GoodBuyAPI.Models.Entry>
+
+@{
+    ViewData["Title"] = "Index";
+    int rowNo = 0;
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<p>Current entry count: @Model.Count()</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            No
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Link)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </th>
+        <th>
+            Operations
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @(rowNo += 1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            <a href="@Html.DisplayFor(modelItem => item.Link)">@Html.DisplayFor(modelItem => item.Link)</a>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedDate)
+        </td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> | <a asp-action="Details" asp-route-id="@item.ID">Details</a> | <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+        </td>
+    </tr>
+}
+    </tbody>
+</table>
