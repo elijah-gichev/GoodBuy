@@ -1,14 +1,32 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:connectivity/connectivity.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
 import '../../repository/repository.dart';
+import '../../models/full_product_info.dart';
+import '../../main.dart';
 
 part 'about_event.dart';
 part 'about_state.dart';
+
+bool isNextScanAllowed([int duration = 15]) {
+  int curTimeStamp = getTimestamp();
+
+  if (numberLaunches == 0) {
+    numberLaunches += 1;
+    startTimestamp = curTimeStamp;
+    return true;
+  }
+
+  if ((curTimeStamp - startTimestamp) > duration) {
+    startTimestamp = curTimeStamp;
+    return true;
+  } else {
+    return false;
+  }
+}
 
 class AboutBloc extends Bloc<AboutEvent, AboutState> {
   AboutBloc() : super(AboutInitial());
@@ -19,37 +37,39 @@ class AboutBloc extends Bloc<AboutEvent, AboutState> {
   Stream<AboutState> mapEventToState(
     AboutEvent event,
   ) async* {
-    if (event is AboutStarted) {
-      try {
-        await rep.getAllDataThatMeetsRequirements();
-        yield AboutLoadSuccess();
-      } catch (error) {
-        print(error);
-        yield AboutLoadFailure();
+    bool hasInternet = await checkInternet();
+
+    if (isNextScanAllowed(10)) {
+      if (!hasInternet) {
+        print("NO IE");
+        yield AboutNoIEConnection();
       }
+
+      if (event is AboutStarted) {
+        try {
+          FullProductInfo fullProductInfo =
+              await rep.getAllDataThatMeetsRequirements(event.qr);
+          yield AboutLoadSuccess(fullProductInfo: fullProductInfo);
+        } catch (error) {
+          print(error);
+          yield AboutLoadFailure();
+        }
+      }
+    } else {
+      yield AboutNextScanNotAllowed();
     }
-    if (event is AboutIENotConnected) {
-      yield AboutNoIEConnection();
+  }
+
+  Future<bool> checkInternet() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
-
-// Future<List<Post>> _fetchPosts(int startIndex, int limit) async {
-//     final response = await httpClient.get(
-//         'https://jsonplaceholder.typicode.com/posts?_start=$startIndex&_limit=$limit');
-//     if (response.statusCode == 200) {
-//       final data = json.decode(response.body) as List;
-//       return data.map((rawPost) {
-//         return Post(
-//           id: rawPost['id'],
-//           title: rawPost['title'],
-//           body: rawPost['body'],
-//         );
-//       }).toList();
-//     } else {
-//       throw Exception('error fetching posts');
-//     }
-//   }
 
 class SimpleBlocObserver extends BlocObserver {
   @override

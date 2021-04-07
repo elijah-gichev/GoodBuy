@@ -12,7 +12,7 @@ class ScannerPage extends StatefulWidget {
 }
 
 class _ScannerPageState extends State<ScannerPage> {
-  String qr = "just data";
+  String qr = "empty";
   bool camState = true;
 
   int _selectedIndex = 0;
@@ -35,19 +35,17 @@ class _ScannerPageState extends State<ScannerPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            camState = !camState;
-          });
-          //context.read<AboutBloc>().add(AboutStarted());
-          //save data
-          //saveProductLocal("title1", 3.5, "img_url", 5, "111111");
-
-          QrMobileVision.stop();
-          if (!camState) {
-            Navigator.of(context).pushNamed(
-              '/about',
-              arguments: qr,
-            );
+          if (qr != "empty") {
+            setState(() {
+              camState = !camState;
+            });
+            QrMobileVision.stop();
+            if (!camState) {
+              Navigator.of(context).pushNamed(
+                '/about',
+                arguments: qr,
+              );
+            }
           }
         },
         child: Icon(

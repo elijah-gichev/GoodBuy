@@ -4,30 +4,31 @@ import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart';
 
-import '../models/product_model.dart';
+import '../models/full_product_info.dart';
+import '../funcs/pref_helper/save_product_local.dart';
 
 class Repository {
-  final String qr = "40409801";
-
   final LinkProvider linkProvider = LinkProvider();
 
   final ProductReviewsProvider productReviewsProvider =
       ProductReviewsProvider();
 
-  Future<dynamic> getAllDataThatMeetsRequirements() async {
+  Future<FullProductInfo> getAllDataThatMeetsRequirements(String qr) async {
     final FetchedLink linkInfo =
         await linkProvider.readData(qr); //получили с бд ссылку на товары
 
     FullProductInfo reviewsInfo;
     try {
       reviewsInfo = await productReviewsProvider.readData(linkInfo.link);
+      //reviewsInfo = await productReviewsProvider.emulateReadData();
+
+      saveProductLocal(reviewsInfo.title, reviewsInfo.generalRating,
+          reviewsInfo.urlProductImg, reviewsInfo.countRating, qr);
     } catch (ec) {
       print("Exception in productReviewsProvider");
     }
 
-    //print("linkInfo.link: ${linkInfo.link}");
-    //print("reviewsInfo.name: ${reviewsInfo['name']}");
-    print("reviewsInfo.title");
+    //print(reviewsInfo.countRating);
     return reviewsInfo;
   }
 }
@@ -101,7 +102,6 @@ class ProductReviewsProvider {
       });
       */
 
-      /*
       var reviews = document.querySelector(
           ".otz_product_reviews_left .review-list-2"); // Парсим лист отзывов
       List<Review> reviewsList = []; // Массив отзывов
@@ -154,19 +154,71 @@ class ProductReviewsProvider {
         }
       });
 
-      */
-
+      //List<Review> reviewsList = [];
       return FullProductInfo(
           title: name,
           urlProductImg: img,
           generalRating: rating,
-          countRating: ratingCount);
-      //reviews: reviewsList);
+          countRating: ratingCount,
+          reviews: reviewsList);
     } else {
       print("parse exception");
       throw Exception(); // Не подключились по ссылке - дропнули ошибку
 
     }
+  }
+
+  Future<FullProductInfo> emulateReadData() async {
+    FullProductInfo res;
+
+    List<Review> reviewsList = [
+      Review(
+          author: "Anton",
+          rating: 5,
+          urlAuthorImg: "url img",
+          date: "now1",
+          title: "all OK",
+          textPlus: "all OK",
+          textMinus: "all bad",
+          text: "lorum 1"),
+      Review(
+          author: "Evgen",
+          rating: 2,
+          urlAuthorImg: "url img2",
+          date: "now12",
+          title: "all OK2",
+          textPlus: "all OK2",
+          textMinus: "all bad2",
+          text: "lorum 12"),
+      Review(
+          author: "Alex",
+          rating: 4,
+          urlAuthorImg: "alex img",
+          date: "now123",
+          title: "all OK23",
+          textPlus: "all OK23",
+          textMinus: "all bad23",
+          text: "lorum 1233333"),
+      Review(
+          author: "Elijah",
+          rating: 1,
+          urlAuthorImg: "elijah img",
+          date: "now1233",
+          title: "all OK23323",
+          textPlus: "all OK2323asas",
+          textMinus: "all bad2sas",
+          text: "lorum 12sasasas"),
+    ];
+    await Future.delayed(Duration(milliseconds: 500), () {
+      res = FullProductInfo(
+          title: "emulate name; qr",
+          urlProductImg: "emulate img",
+          generalRating: 1,
+          countRating: 666,
+          reviews: reviewsList);
+    });
+
+    return res;
   }
 }
 
@@ -181,41 +233,4 @@ class FetchedLink {
       @required this.name,
       @required this.link,
       @required this.createdDate});
-}
-
-class FullProductInfo {
-  final String title;
-  final String urlProductImg;
-  final double generalRating;
-  final int countRating;
-  //final List<dynamic> specs
-  final List<Review> reviews;
-
-  FullProductInfo(
-      {@required this.title,
-      @required this.urlProductImg,
-      @required this.generalRating,
-      @required this.countRating,
-      this.reviews});
-}
-
-class Review {
-  final String author;
-  final int rating;
-  final String urlAuthorImg;
-  final String date;
-  final String title;
-  final String textPlus;
-  final String textMinus;
-  final String text;
-
-  Review(
-      {@required this.author,
-      @required this.rating,
-      @required this.urlAuthorImg,
-      @required this.date,
-      @required this.title,
-      @required this.textPlus,
-      @required this.textMinus,
-      @required this.text});
 }
