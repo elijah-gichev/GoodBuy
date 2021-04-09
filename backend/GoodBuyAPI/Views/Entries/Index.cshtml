@@ -1,4 +1,4 @@
-﻿@using System.Runtime.CompilerServices
+@using System.Runtime.CompilerServices
 @using Microsoft.Data.SqlClient
 @model X.PagedList.IPagedList<GoodBuyAPI.Models.Entry>
 @using X.PagedList.Mvc.Core
@@ -15,7 +15,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<p>Current entry count: @Model.Count()</p>
+<p>Current entry count: @Model.TotalItemCount</p>
 @using (Html.BeginForm("Index", "Entries", FormMethod.Get))
 {
     <p>
