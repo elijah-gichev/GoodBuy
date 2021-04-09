@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -34,7 +34,7 @@ namespace ExcelParser
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
                     Scopes,
-                    "duelistemir1@gmail.com",
+                    "example@gmail.com",
                     CancellationToken.None,
                     new FileDataStore(credPath, true)).Result;
                 //Console.WriteLine("Credential file saved to: " + credPath);
