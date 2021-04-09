@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GoodBuyAPI.Models;
+using X.PagedList;
 
 namespace GoodBuyAPI.Controllers
 {
@@ -19,9 +20,58 @@ namespace GoodBuyAPI.Controllers
         }
 
         // GET: Entries
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            return View(await _context.EntriesList.ToListAsync());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParam = sortOrder == "Name" ? "name_desc" : "Name";
+            ViewBag.DateSortParam = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewBag.IdSortParam = String.IsNullOrEmpty(sortOrder) ? "identity_desc" : "";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var entries = from s in _context.EntriesList select s;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                entries = entries.Where(s => s.Name.Contains(searchString)
+                                             || s.ID.ToString().Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "Name":
+                    entries = entries.OrderBy(s => s.Name);
+                    break;
+                case "name_desc":
+                    entries = entries.OrderByDescending(s => s.Name);
+                    break;
+                case "Date":
+                    entries = entries.OrderBy(s => s.CreatedDate);
+                    break;
+                case "date_desc":
+                    entries = entries.OrderByDescending(s => s.CreatedDate);
+                    break;
+                case "identity_desc":
+                    entries = entries.OrderByDescending(s => s.ID);
+                    break;
+                default:
+                    entries = entries.OrderBy(s => s.ID);
+                    break;
+            }
+
+            int pageSize = 20;
+            int pageNumber = (page ?? 1);
+
+            return View(await entries.ToPagedListAsync(pageNumber, pageSize));
         }
 
         // GET: Entries/Details/5
