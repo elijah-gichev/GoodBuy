@@ -22,7 +22,6 @@ namespace GoodBuyAPI.Models
 
         // Initially used to transfer entries from Excel to database.
         // Tool is also implemented in the solution.
-
         #region initialData
 
 //        protected override void OnModelCreating(ModelBuilder modelBuilder)

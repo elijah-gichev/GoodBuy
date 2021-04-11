@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "mssql2": {
+      "type": "mssql.local",
+      "connectionId": "GoodBuyAPIContextConnection"
+    },
+    "mssql3": {
+      "type": "mssql.local",
+      "connectionId": "UserContextConnection"
+    }
+  }
+}

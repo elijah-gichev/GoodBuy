@@ -15,7 +15,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<p>Current entry count: @Model.Count()</p>
+<p>Current entry count: @Model.TotalItemCount</p>
 @using (Html.BeginForm("Index", "Entries", FormMethod.Get))
 {
     <p>
@@ -69,7 +69,7 @@
                 @(rowNo += 1)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.Name, "_NameWithoutSlash")
             </td>
             <td>
                 <a href="@Html.DisplayFor(modelItem => item.Link)">@Html.DisplayFor(modelItem => item.Link)</a>

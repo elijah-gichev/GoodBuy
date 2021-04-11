@@ -20,6 +20,22 @@ namespace GoodBuyAPI.Controllers
         }
 
         // GET: Entries
+        /// <summary>
+        /// Main page callback.
+        /// </summary>
+        /// <param name="sortOrder">/?SortOrder={sortOrder}
+        /// Parameter to sort the list
+        /// </param>
+        /// <param name="currentFilter">/?SortOrder={sortOrder}&currentFilter={filter}
+        /// Parameter of search. If you search items and want to sort them, this parameter will be used.
+        /// </param> 
+        /// <param name="searchString">/?SearchString={searchString}
+        /// Parameter to search the list of entries and return matching ones.
+        /// </param>
+        /// <param name="page">/?page={page}
+        /// Page number. By default (on main page) is 1.
+        /// </param>
+        /// <returns>View of main page.</returns>
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
@@ -42,6 +58,7 @@ namespace GoodBuyAPI.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
+                //TODO: Improve searching? Is Contains really good enough?
                 entries = entries.Where(s => s.Name.Contains(searchString)
                                              || s.ID.ToString().Contains(searchString));
             }
@@ -92,6 +109,12 @@ namespace GoodBuyAPI.Controllers
         //    return View(entry);
         //}
 
+        // GET: Entries/Details/5
+        /// <summary>
+        /// Details page. Is used to return a JSON document for API callback.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<ActionResult<Entry>> Details(ulong? id)
         {
             var entryItem = await _context.EntriesList.FindAsync(id);
