@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GoodBuyAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using X.PagedList;
 
 namespace GoodBuyAPI.Controllers
 {
+    [Authorize]
     public class EntriesController : Controller
     {
         private readonly MyDatabaseContext _context;
@@ -36,6 +38,7 @@ namespace GoodBuyAPI.Controllers
         /// Page number. By default (on main page) is 1.
         /// </param>
         /// <returns>View of main page.</returns>
+        [AllowAnonymous]
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
@@ -60,37 +63,38 @@ namespace GoodBuyAPI.Controllers
             {
                 //TODO: Improve searching? Is Contains really good enough?
                 entries = entries.Where(s => s.Name.Contains(searchString)
-                                             || s.ID.ToString().Contains(searchString));
+                                             || s.BarcodeId.ToString().Contains(searchString));
             }
 
             switch (sortOrder)
             {
-                case "Name":
+                case "name":
                     entries = entries.OrderBy(s => s.Name);
                     break;
                 case "name_desc":
                     entries = entries.OrderByDescending(s => s.Name);
                     break;
-                case "Date":
+                case "date":
                     entries = entries.OrderBy(s => s.CreatedDate);
                     break;
                 case "date_desc":
                     entries = entries.OrderByDescending(s => s.CreatedDate);
                     break;
                 case "identity_desc":
-                    entries = entries.OrderByDescending(s => s.ID);
+                    entries = entries.OrderByDescending(s => s.BarcodeId);
                     break;
                 default:
-                    entries = entries.OrderBy(s => s.ID);
+                    entries = entries.OrderBy(s => s.BarcodeId);
                     break;
             }
 
-            int pageSize = 20;
+            int pageSize = Common.PageSize;
             int pageNumber = (page ?? 1);
 
             return View(await entries.ToPagedListAsync(pageNumber, pageSize));
         }
 
+        #region BeautifulView
         // GET: Entries/Details/5
         //public async Task<IActionResult> Details(ulong? id)
         //{
@@ -100,7 +104,7 @@ namespace GoodBuyAPI.Controllers
         //    }
 
         //    var entry = await _context.EntriesList
-        //        .FirstOrDefaultAsync(m => m.ID == id);
+        //        .FirstOrDefaultAsync(m => m.BarcodeId == id);
         //    if (entry == null)
         //    {
         //        return NotFound();
@@ -108,6 +112,7 @@ namespace GoodBuyAPI.Controllers
 
         //    return View(entry);
         //}
+        #endregion
 
         // GET: Entries/Details/5
         /// <summary>
@@ -115,10 +120,10 @@ namespace GoodBuyAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         public async Task<ActionResult<Entry>> Details(ulong? id)
         {
             var entryItem = await _context.EntriesList.FindAsync(id);
-
             if (entryItem == null)
             {
                 return NotFound();
@@ -138,7 +143,7 @@ namespace GoodBuyAPI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Link,CreatedDate")] Entry entry)
+        public async Task<IActionResult> Create([Bind("BarcodeId,Name,Link,CreatedDate")] Entry entry)
         {
             if (ModelState.IsValid)
             {
@@ -170,9 +175,9 @@ namespace GoodBuyAPI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ulong id, [Bind("ID,Name,Link,CreatedDate")] Entry entry)
+        public async Task<IActionResult> Edit(ulong id, [Bind("BarcodeId,Name,Link,CreatedDate")] Entry entry)
         {
-            if (id != entry.ID)
+            if (id != entry.BarcodeId)
             {
                 return NotFound();
             }
@@ -186,7 +191,7 @@ namespace GoodBuyAPI.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EntryExists(entry.ID))
+                    if (!EntryExists(entry.BarcodeId))
                     {
                         return NotFound();
                     }
@@ -209,12 +214,12 @@ namespace GoodBuyAPI.Controllers
             }
 
             var entry = await _context.EntriesList
-                .FirstOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.BarcodeId == id);
             if (entry == null)
             {
                 return NotFound();
             }
-
+            
             return View(entry);
         }
 
@@ -231,7 +236,7 @@ namespace GoodBuyAPI.Controllers
 
         private bool EntryExists(ulong id)
         {
-            return _context.EntriesList.Any(e => e.ID == id);
+            return _context.EntriesList.Any(e => e.BarcodeId == id);
         }
     }
 }

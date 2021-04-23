@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GoodBuyAPI.Models
 {
-    public class Entry
+    public class Exceptions
     {
-        [Key]
-        public ulong BarcodeId { get; set; }
+        public ulong ID { get; set; }
         public string Name { get; set; }
-        public string Link { get; set; }
 
         [Display(Name = "Created Date")]
         [DataType(DataType.Date)]
@@ -16,4 +17,3 @@ namespace GoodBuyAPI.Models
         public DateTime CreatedDate { get; set; }
     }
 }
-
