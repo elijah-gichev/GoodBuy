@@ -11,15 +11,7 @@ import 'package:bloc/bloc.dart';
 
 import 'bloc/about/about_bloc.dart';
 
-int startTimestamp = getTimestamp();
-int numberLaunches = 0;
-
-int getTimestamp() {
-  return (DateTime.now().millisecondsSinceEpoch / 1000).truncate();
-}
-
 void main() async {
-  print("startTimestamp: $startTimestamp, $numberLaunches");
   Bloc.observer = SimpleBlocObserver();
   runApp(MyApp());
 }

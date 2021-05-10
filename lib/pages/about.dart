@@ -15,21 +15,18 @@ class About extends StatefulWidget {
 }
 
 class _AboutState extends State<About> {
-  String qr;
-
   @override
   Widget build(BuildContext context) {
-    qr = ModalRoute.of(context).settings.arguments;
+    //qr = ModalRoute.of(context).settings.arguments;
     return BlocProvider(
       create: (context) => AboutBloc(),
-      child: AboutBody(qr: qr),
+      child: AboutBody(),
     );
   }
 }
 
 class AboutBody extends StatefulWidget {
-  final String qr;
-  const AboutBody({@required this.qr});
+  const AboutBody();
 
   @override
   _AboutBodyState createState() => _AboutBodyState();
@@ -37,11 +34,13 @@ class AboutBody extends StatefulWidget {
 
 class _AboutBodyState extends State<AboutBody> {
   bool isFavorite = false;
+  String qr;
 
-  // @override
-  void initState() {
-    super.initState();
-    context.read<AboutBloc>().add(AboutStarted(qr: widget.qr));
+  @override
+  void didChangeDependencies() {
+    qr = ModalRoute.of(context).settings.arguments;
+    context.read<AboutBloc>().add(AboutStarted(qr: qr));
+    super.didChangeDependencies();
   }
 
   @override
@@ -116,7 +115,7 @@ class _AboutBodyState extends State<AboutBody> {
                                 color: isFavorite ? Colors.red : Colors.grey,
                               ),
                               onPressed: () {
-                                setFavouriteFlagByQr(widget.qr, true);
+                                setFavouriteFlagByQr(qr, true);
                                 setState(() {
                                   isFavorite = true;
                                 });

@@ -11,23 +11,6 @@ import '../../main.dart';
 part 'about_event.dart';
 part 'about_state.dart';
 
-bool isNextScanAllowed([int duration = 15]) {
-  int curTimeStamp = getTimestamp();
-
-  if (numberLaunches == 0) {
-    numberLaunches += 1;
-    startTimestamp = curTimeStamp;
-    return true;
-  }
-
-  if ((curTimeStamp - startTimestamp) > duration) {
-    startTimestamp = curTimeStamp;
-    return true;
-  } else {
-    return false;
-  }
-}
-
 class AboutBloc extends Bloc<AboutEvent, AboutState> {
   AboutBloc() : super(AboutInitial());
 
@@ -39,7 +22,7 @@ class AboutBloc extends Bloc<AboutEvent, AboutState> {
   ) async* {
     bool hasInternet = await checkInternet();
 
-    if (isNextScanAllowed(20)) {
+    if (rep.productReviewsProvider.isAllowedNextReceive()) {
       if (event is AboutStarted) {
         if (!hasInternet) {
           yield AboutNoIEConnection();
@@ -47,10 +30,10 @@ class AboutBloc extends Bloc<AboutEvent, AboutState> {
           try {
             FullProductInfo fullProductInfo =
                 await rep.getAllDataThatMeetsRequirements(event.qr);
-            startTimestamp -= 20;
+            //startTimestamp -= 20;
             yield AboutLoadSuccess(fullProductInfo: fullProductInfo);
           } on NotFoundException {
-            startTimestamp -= 20;
+            //startTimestamp -= 20;
             yield AboutNotFound();
           } catch (error) {
             print(error);

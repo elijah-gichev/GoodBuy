@@ -62,11 +62,32 @@ class SomethingWrongWithOtzovikException implements Exception {
 }
 
 class ProductReviewsProvider {
+  //функционал для контроля обращений к отзовику
+  int _currentTimestamp;
+  static const int DURATION = 15;
+  bool _isFirstReceive = true;
+
+  int _getTimestamp() {
+    return (DateTime.now().millisecondsSinceEpoch / 1000).truncate();
+  }
+
+  void _reloadTimestamp() {
+    _currentTimestamp = _getTimestamp();
+    print("timestamp reloaded");
+  }
+
+  bool isAllowedNextReceive() {
+    if (_isFirstReceive) {
+      _isFirstReceive = false;
+      return true;
+    } else {
+      return _currentTimestamp + DURATION < _getTimestamp();
+    }
+  }
+
   Future<FullProductInfo> readData(String url) async {
+    //_reloadTimestamp();  !!!!!!!!!!!!!!!!!!!
     final response = await http.Client().get(Uri.parse(url));
-    //final response = await http.Client().get(url);
-    //
-    //Uri.parse(url)
 
     print(response.statusCode);
     print(url);
@@ -172,6 +193,8 @@ class ProductReviewsProvider {
   }
 
   Future<FullProductInfo> emulateReadData() async {
+    _reloadTimestamp();
+
     FullProductInfo res;
 
     List<Review> reviewsList = [
