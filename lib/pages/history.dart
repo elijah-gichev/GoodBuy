@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/scan_fab.dart';
-import '../bloc/history/history_bloc.dart';
+import '../widgets/something_wrong.dart';
+import '../widgets/history_card.dart';
 
-import '../funcs/pref_helper/get_products_local.dart';
+import '../bloc/history/history_bloc.dart';
 
 class HistoryPage extends StatefulWidget {
   @override
@@ -28,12 +29,13 @@ class HistoryPageBody extends StatefulWidget {
 }
 
 class _HistoryPageBodyState extends State<HistoryPageBody> {
+  void initState() {
+    super.initState();
+    context.read<HistoryBloc>().add(HistoryLoaded());
+  }
+
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(milliseconds: 500), () {
-      context.read<HistoryBloc>().add(HistoryLoaded());
-    });
-
     return Scaffold(
       body: BlocBuilder<HistoryBloc, HistoryState>(builder: (context, state) {
         if (state is HistoryLoadSuccess) {
@@ -54,38 +56,7 @@ class _HistoryPageBodyState extends State<HistoryPageBody> {
           );
         }
         if (state is HistoryEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: Text(
-                      'Здесь пока что пусто',
-                      style: TextStyle(
-                        fontSize: 24,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Text(
-                    ';(',
-                    style: TextStyle(
-                      fontSize: 100,
-                      color: Colors.green,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 35,
-                  height: 35,
-                )
-              ],
-            ),
-          );
+          return SomethingWrong(text: 'Здесь пока что пусто');
         }
         if (state is HistoryInitial) {
           return Center(
@@ -98,57 +69,7 @@ class _HistoryPageBodyState extends State<HistoryPageBody> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: ScanFAB(),
       bottomNavigationBar: CustomBottomAppBar(
-        items: [
-          CustomAppBarItem(icon: Icons.history),
-          CustomAppBarItem(icon: Icons.favorite),
-        ],
-        selectedIndex: 0,
-      ),
-    );
-  }
-}
-
-// final String title;
-//   final double stars;
-//   final String imgUrl;
-//   final int reviews;
-//   final String qr;
-
-class HistoryCard extends StatelessWidget {
-  final String title;
-  final double stars;
-  final String imgUrl;
-  final int reviews;
-  final String qr; //TODO extended info
-
-  HistoryCard(this.title, this.stars, this.imgUrl, this.reviews, this.qr);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          ListTile(
-            //leading: Icon(Icons.arrow_drop_down_circle),
-            title: Text(title ?? "null"),
-            subtitle: Text(
-              qr ?? "qr",
-              style: TextStyle(color: Colors.black.withOpacity(0.6)),
-            ),
-            trailing: Text(
-              '$stars/5',
-              style: TextStyle(color: stars <= 3 ? Colors.red : Colors.green),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              "Оценка состоит из $reviews отзывов",
-              style: TextStyle(color: Colors.black.withOpacity(0.6)),
-            ),
-          ),
-        ],
+        selectedTab: Tabs.history,
       ),
     );
   }

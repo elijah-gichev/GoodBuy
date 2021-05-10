@@ -26,11 +26,7 @@ class _ScannerPageState extends State<ScannerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: CustomBottomAppBar(
-        items: [
-          CustomAppBarItem(icon: Icons.history),
-          CustomAppBarItem(icon: Icons.favorite),
-        ],
-        selectedIndex: 2,
+        selectedTab: Tabs.nothing,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(

@@ -2,47 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:qr_mobile_vision/qr_mobile_vision.dart';
 
-//функционал для создания кастомных bottomBar
+enum Tabs { history, favourite, nothing }
+
 class CustomAppBarItem {
   IconData icon;
-  bool hasNotification;
-
-  CustomAppBarItem({@required this.icon, this.hasNotification});
+  CustomAppBarItem({@required this.icon});
 }
 
 class CustomBottomAppBar extends StatefulWidget {
-  //final ValueChanged<int> onTabSelected;
-  final List<CustomAppBarItem> items;
-  int selectedIndex;
+  final List<CustomAppBarItem> items = [
+    CustomAppBarItem(icon: Icons.history),
+    CustomAppBarItem(icon: Icons.favorite),
+  ];
+  final Tabs selectedTab;
 
-  CustomBottomAppBar({@required this.items, @required this.selectedIndex});
+  CustomBottomAppBar({@required this.selectedTab});
 
   @override
   _CustomBottomAppBarState createState() => _CustomBottomAppBarState();
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
-  void _selectedTab(int index) {
-    //_selectedIndex = index;
-    if (index == 0) {
-      Navigator.pushNamed(context, '/history');
-      QrMobileVision.stop();
-    } else if (index == 1) {
-      Navigator.pushNamed(context, '/favourite');
-      QrMobileVision.stop();
+  void _selectedTab(Tabs activeTab) {
+    switch (activeTab) {
+      case Tabs.history:
+        Navigator.pushNamed(context, '/history');
+        QrMobileVision.stop();
+        break;
+      case Tabs.favourite:
+        Navigator.pushNamed(context, '/favourite');
+        QrMobileVision.stop();
+        break;
+      case Tabs.nothing:
+        // TODO: Handle this case.
+        break;
     }
   }
 
-  void _updateIndex(int index) {
-    //widget.onTabSelected(index);
-    _selectedTab(index);
-    // setState(() {
-    //   _selectedIndex = index;
-    // });
-  }
-
   Widget _buildTabIcon(
-      {int index, CustomAppBarItem item, ValueChanged<int> onPressed}) {
+      {Tabs tab, CustomAppBarItem item, ValueChanged<Tabs> onPressed}) {
     return Container(
       child: SizedBox(
         height: 60,
@@ -50,10 +48,10 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-            onTap: () => onPressed(index),
+            onTap: () => onPressed(tab),
             child: Icon(
               item.icon,
-              color: widget.selectedIndex == index ? Colors.green : Colors.grey,
+              color: widget.selectedTab == tab ? Colors.green : Colors.grey,
               size: 24,
             ),
           ),
@@ -69,9 +67,9 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
       widget.items.length,
       (int index) {
         return _buildTabIcon(
-          index: index,
+          tab: Tabs.values[index],
           item: widget.items[index],
-          onPressed: _updateIndex,
+          onPressed: _selectedTab,
         );
       },
     );

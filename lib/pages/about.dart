@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../widgets/bottom_nav_bar.dart';
-import '../widgets/scan_fab.dart';
-
 import '../funcs/pref_helper/set_favourite_flag_local.dart';
 import '../bloc/about/about_bloc.dart';
 
-import '../models/full_product_info.dart';
+import '../widgets/bottom_nav_bar.dart';
+import '../widgets/scan_fab.dart';
+import '../widgets/review_card.dart';
+import '../widgets/something_wrong.dart';
 
 class About extends StatefulWidget {
   @override
@@ -50,11 +50,7 @@ class _AboutBodyState extends State<AboutBody> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: ScanFAB(),
       bottomNavigationBar: CustomBottomAppBar(
-        items: [
-          CustomAppBarItem(icon: Icons.history),
-          CustomAppBarItem(icon: Icons.favorite),
-        ],
-        selectedIndex: 2,
+        selectedTab: Tabs.nothing,
       ),
       body: BlocBuilder<AboutBloc, AboutState>(
         builder: (context, state) {
@@ -64,40 +60,9 @@ class _AboutBodyState extends State<AboutBody> {
                 backgroundColor: Colors.green,
               ),
             );
-          }
-          if (state is AboutNotFound) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: Text(
-                      'Данный товар не найден!',
-                      style: TextStyle(
-                        fontSize: 24,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      ';(',
-                      style: TextStyle(
-                        fontSize: 144,
-                        color: Colors.green,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 35,
-                    height: 35,
-                  )
-                ],
-              ),
-            );
-          }
-          if (state is AboutNextScanNotAllowed) {
+          } else if (state is AboutNotFound) {
+            return SomethingWrong(text: 'Данный товар не найден!');
+          } else if (state is AboutNextScanNotAllowed) {
             return Center(
               child: Container(
                 width: MediaQuery.of(context).size.width * 9 / 10,
@@ -134,46 +99,13 @@ class _AboutBodyState extends State<AboutBody> {
                 ),
               ),
             );
-          }
-          if (state is AboutNoIEConnection) {
-            return Center(
+          } else if (state is AboutNoIEConnection) {
+            return SomethingWrong(text: 'Нет интернет соединения!');
+          } else if (state is AboutLoadSuccess) {
+            return SafeArea(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: Text(
-                      'Нет интернет соединения!',
-                      style: TextStyle(
-                        fontSize: 24,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      ';(',
-                      style: TextStyle(
-                        fontSize: 144,
-                        color: Colors.green,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 35,
-                    height: 35,
-                  )
-                ],
-              ),
-            );
-          }
-          if (state is AboutLoadSuccess) {
-            return ListView.builder(
-              padding: const EdgeInsets.all(8),
-              itemCount: state.fullProductInfo.reviews.length + 1,
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return Card(
+                  Card(
                     clipBehavior: Clip.antiAlias,
                     child: Column(
                       children: [
@@ -209,129 +141,46 @@ class _AboutBodyState extends State<AboutBody> {
                           ),
                         ),
                         //пока непонятно, что делать с картинкой, пока их будет 2 в строке
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              child: Image.asset(
-                                'assets/cheese.jpg',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                            Expanded(
-                              child: Image.asset(
-                                'assets/cheese.jpg',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                            // Image.network(
-                            //     "https://i.otzovik.com/objects/b/870000/867684.png",)//нужен лоадер
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //   children: [
+                        //     Expanded(
+                        //       child: Image.asset(
+                        //         'assets/cheese.jpg',
+                        //         fit: BoxFit.scaleDown,
+                        //       ),
+                        //     ),
+                        //     Expanded(
+                        //       child: Image.asset(
+                        //         'assets/cheese.jpg',
+                        //         fit: BoxFit.scaleDown,
+                        //       ),
+                        //     ),
+                        //     // Image.network(
+                        //     //     "https://i.otzovik.com/objects/b/870000/867684.png",)//нужен лоадер
+                        //   ],
+                        // ),
                       ],
                     ),
-                  );
-                }
-                return ReviewCard(
-                    review: state.fullProductInfo.reviews[index - 1]);
-              },
-            );
-          }
-          if (state is AboutLoadFailure) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: Text(
-                      'Что-то пошло не так!',
-                      style: TextStyle(
-                        fontSize: 24,
-                      ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(8),
+                      itemCount: state.fullProductInfo.reviews.length,
+                      itemBuilder: (context, index) {
+                        return ReviewCard(
+                            review: state.fullProductInfo.reviews[index]);
+                      },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(
-                      ';(',
-                      style: TextStyle(
-                        fontSize: 144,
-                        color: Colors.green,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 35,
-                    height: 35,
-                  )
                 ],
               ),
             );
+          } else {
+            //if (state is AboutLoadFailure) {
+            return SomethingWrong(text: 'Что-то пошло не так!');
           }
         },
-      ),
-    );
-  }
-}
-
-class ReviewCard extends StatelessWidget {
-  final Review review;
-  ReviewCard({
-    @required this.review,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          ListTile(
-            //leading: Icon(Icons.arrow_drop_down_circle),
-            title: Text(review.author ?? "null"),
-            subtitle: Text(
-              review.date,
-              style: TextStyle(color: Colors.black.withOpacity(0.6)),
-            ),
-            trailing: Text(
-              '${review.rating}/5',
-              style: TextStyle(
-                  color: review.rating <= 3 ? Colors.red : Colors.green),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              review.text,
-              style: TextStyle(color: Colors.black.withOpacity(0.6)),
-            ),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.add_circle_outline,
-              color: Colors.green,
-              size: 30,
-            ),
-            title: Text(review.textPlus),
-            subtitle: Text(
-              'Достоинства',
-              style: TextStyle(color: Colors.green.withOpacity(0.6)),
-            ),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.remove_circle_outline,
-              color: Colors.red,
-              size: 30,
-            ),
-            title: Text(review.textMinus),
-            subtitle: Text(
-              'Недостатки',
-              style: TextStyle(color: Colors.red.withOpacity(0.6)),
-            ),
-          ),
-        ],
       ),
     );
   }

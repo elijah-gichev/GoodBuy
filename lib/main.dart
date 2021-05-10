@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'pages/welcome.dart';
 import 'pages/favourite.dart';
-import 'pages/not_found.dart';
 import 'pages/about.dart';
 import 'pages/scanner_page.dart';
 import 'pages/history.dart';
@@ -11,9 +10,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:bloc/bloc.dart';
 
 import 'bloc/about/about_bloc.dart';
-
-import 'package:http/http.dart' as http;
-import 'package:html/parser.dart';
 
 int startTimestamp = getTimestamp();
 int numberLaunches = 0;

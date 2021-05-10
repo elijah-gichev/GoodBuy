@@ -8,9 +8,6 @@ class FirstPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         bottomOpacity: 0.0,
         elevation: 0.0,
-        actions: [
-          //
-        ],
       ),
       backgroundColor: Colors.white,
       body: Column(
@@ -19,7 +16,6 @@ class FirstPage extends StatelessWidget {
           Container(
             child: Image.asset('assets/logo.png'),
             alignment: Alignment.center,
-            //color: Colors.white,
           ),
           Container(
             padding: EdgeInsets.all(5),
@@ -30,16 +26,6 @@ class FirstPage extends StatelessWidget {
           ),
         ],
       ),
-      // bottomNavigationBar: BottomAppBar(
-      //   child: Container(
-      //     padding: EdgeInsets.all(10),
-      //     child: Text(
-      //       'tusovka dev.',
-      //       textAlign: TextAlign.center,
-      //       style: TextStyle(color: Color.fromARGB(100, 0, 0, 0)),
-      //     ),
-      //   ),
-      // ),
     );
   }
 }

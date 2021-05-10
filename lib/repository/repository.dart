@@ -14,13 +14,13 @@ class Repository {
       ProductReviewsProvider();
 
   Future<FullProductInfo> getAllDataThatMeetsRequirements(String qr) async {
-    final FetchedLink linkInfo =
-        await linkProvider.readData(qr); //получили с бд ссылку на товары
+    //final FetchedLink linkInfo =
+    //    await linkProvider.readData(qr); //получили с бд ссылку на товары
 
     FullProductInfo reviewsInfo;
     try {
-      reviewsInfo = await productReviewsProvider.readData(linkInfo.link);
-      //reviewsInfo = await productReviewsProvider.emulateReadData();
+      //reviewsInfo = await productReviewsProvider.readData(linkInfo.link);
+      reviewsInfo = await productReviewsProvider.emulateReadData();
 
       saveProductLocal(reviewsInfo.title, reviewsInfo.generalRating,
           reviewsInfo.urlProductImg, reviewsInfo.countRating, qr);
@@ -51,6 +51,7 @@ class LinkProvider {
           link: data['link'],
           createdDate: data['createdDate']);
     } else {
+      print(response.statusCode);
       throw NotFoundException();
     }
   }

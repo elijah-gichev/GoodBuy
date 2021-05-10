@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:good_buy/widgets/bottom_nav_bar.dart';
 import '../widgets/scan_fab.dart';
 
-//import '../funcs/QR.dart';
-
 class NotFound extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -41,11 +39,7 @@ class NotFound extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: CustomBottomAppBar(
-        items: [
-          CustomAppBarItem(icon: Icons.history),
-          CustomAppBarItem(icon: Icons.favorite),
-        ],
-        selectedIndex: 1,
+        selectedTab: Tabs.favourite,
       ),
     );
   }

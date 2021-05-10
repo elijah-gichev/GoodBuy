@@ -40,37 +40,37 @@ class AboutBloc extends Bloc<AboutEvent, AboutState> {
     bool hasInternet = await checkInternet();
 
     if (isNextScanAllowed(20)) {
-      if (!hasInternet) {
-        print("NO IE");
-        yield AboutNoIEConnection();
-      }
-
       if (event is AboutStarted) {
-        try {
-          FullProductInfo fullProductInfo =
-              await rep.getAllDataThatMeetsRequirements(event.qr);
-          yield AboutLoadSuccess(fullProductInfo: fullProductInfo);
-        } on NotFoundException {
-          startTimestamp -= 20;
-          yield AboutNotFound();
-        } catch (error) {
-          print(error);
-          yield AboutLoadFailure();
+        if (!hasInternet) {
+          yield AboutNoIEConnection();
+        } else {
+          try {
+            FullProductInfo fullProductInfo =
+                await rep.getAllDataThatMeetsRequirements(event.qr);
+            startTimestamp -= 20;
+            yield AboutLoadSuccess(fullProductInfo: fullProductInfo);
+          } on NotFoundException {
+            startTimestamp -= 20;
+            yield AboutNotFound();
+          } catch (error) {
+            print(error);
+            yield AboutLoadFailure();
+          }
         }
       }
     } else {
       yield AboutNextScanNotAllowed();
     }
   }
+}
 
-  Future<bool> checkInternet() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi) {
-      return true;
-    } else {
-      return false;
-    }
+Future<bool> checkInternet() async {
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.mobile ||
+      connectivityResult == ConnectivityResult.wifi) {
+    return true;
+  } else {
+    return false;
   }
 }
 
