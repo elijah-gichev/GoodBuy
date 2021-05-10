@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using GoodBuyAPI.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace GoodBuyAPI
 {
@@ -30,6 +32,24 @@ namespace GoodBuyAPI
             services.AddControllersWithViews();
             services.AddDbContext<MyDatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection")));
+
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<MyDatabaseContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddRazorPagesOptions(options =>
+            {
+                options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+            });
+
+            services.AddSingleton<IEmailSender, EmailSender>();
+
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,11 +66,12 @@ namespace GoodBuyAPI
                 //app.UseHsts();
             }
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -58,6 +79,7 @@ namespace GoodBuyAPI
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Entries}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

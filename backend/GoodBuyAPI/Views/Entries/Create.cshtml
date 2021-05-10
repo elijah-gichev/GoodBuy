@@ -13,9 +13,9 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ID" class="control-label"></label>
-                <input asp-for="ID" class="form-control" />
-                <span asp-validation-for="ID" class="text-danger"></span>
+                <label asp-for="BarcodeId" class="control-label"></label>
+                <input asp-for="BarcodeId" class="form-control" />
+                <span asp-validation-for="BarcodeId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -29,7 +29,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" value="@DateTime.Today.ToString("{dd-MM-yyyy}")"/>
+                <input asp-for="CreatedDate" class="form-control" value="@DateTime.Today.ToString("{0:dd-MM-yyyy}")"/>
                 <span asp-validation-for="CreatedDate" class="text-danger"></span>
             </div>
             <div class="form-group">

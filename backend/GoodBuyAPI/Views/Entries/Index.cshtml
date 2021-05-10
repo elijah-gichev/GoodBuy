@@ -1,17 +1,35 @@
 ﻿@using System.Runtime.CompilerServices
-@model IEnumerable<GoodBuyAPI.Models.Entry>
+@using Microsoft.Data.SqlClient
+@model X.PagedList.IPagedList<GoodBuyAPI.Models.Entry>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css"/>
 
 @{
     ViewData["Title"] = "Index";
-    int rowNo = 0;
+    int rowNo = Model.PageNumber == 1 ? 0 : (Model.PageNumber - 1) * Common.PageSize;
+    var loggedIn = User?.Identity.IsAuthenticated == true;
 }
 
 <h1>Index</h1>
+@if (loggedIn)
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<p>Current entry count: @Model.Count()</p>
+<p>Current entry count: @Model.TotalItemCount</p>
+@using (Html.BeginForm("Index", "Entries", FormMethod.Get))
+{
+    <p>
+        Search: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new
+           {
+               @placeholder = "BarcodeId or Name",
+           })
+        <input type="submit" value="Search"/>
+    </p>
+}
 <table class="table">
     <thead>
     <tr>
@@ -19,16 +37,28 @@
             No
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.ActionLink("Name", "Index", new
+            {
+                SortOrder = ViewBag.NameSortParam,
+                currentFilter = ViewBag.CurrentFilter
+            })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Link)
+            Link
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ID)
+            @Html.ActionLink("BarcodeId", "Index", new
+            {
+                SortOrder = ViewBag.IdSortParam,
+                currentFilter = ViewBag.CurrentFilter
+            })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CreatedDate)
+            @Html.ActionLink("Created Date", "Index", new
+            {
+                SortOrder = ViewBag.DateSortParam,
+                currentFilter = ViewBag.CurrentFilter
+            })
         </th>
         <th>
             Operations
@@ -36,27 +66,52 @@
     </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @(rowNo += 1)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            <a href="@Html.DisplayFor(modelItem => item.Link)">@Html.DisplayFor(modelItem => item.Link)</a>
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedDate)
-        </td>
-        <td>
-            <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> | <a asp-action="Details" asp-route-id="@item.ID">Details</a> | <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @(rowNo += 1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name, "_NameWithoutSlash")
+            </td>
+            <td>
+                <a href="@Html.DisplayFor(modelItem => item.Link)">@Html.DisplayFor(modelItem => item.Link)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BarcodeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @if (loggedIn)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.BarcodeId">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.BarcodeId">Delete</a>
+                }
+                <a asp-action="Details" asp-route-id="@item.BarcodeId">Details</a>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
+
+<br/>
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new
+    {
+        page,
+        sortOrder = ViewBag.CurrentSort,
+        currentFilter = ViewBag.CurrentFilter
+    }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new PagedListRenderOptions
+    {
+        LinkToFirstPageFormat = "<<",
+        LinkToPreviousPageFormat = "<",
+        LinkToNextPageFormat = ">",
+        LinkToLastPageFormat = ">>",
+        MaximumPageNumbersToDisplay = 5,
+        DisplayEllipsesWhenNotShowingAllPageNumbers = false,
+    }, new AjaxOptions() {HttpMethod = "GET", UpdateTargetId = "grid_container"}))
