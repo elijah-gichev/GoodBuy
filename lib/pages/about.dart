@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:good_buy/cubit/timer/timer_cubit.dart';
 
 import '../funcs/pref_helper/set_favourite_flag_local.dart';
 import '../bloc/about/about_bloc.dart';
@@ -17,9 +18,8 @@ class About extends StatefulWidget {
 class _AboutState extends State<About> {
   @override
   Widget build(BuildContext context) {
-    //qr = ModalRoute.of(context).settings.arguments;
     return BlocProvider(
-      create: (context) => AboutBloc(),
+      create: (context) => AboutBloc(context.read<TimerCubit>()),
       child: AboutBody(),
     );
   }

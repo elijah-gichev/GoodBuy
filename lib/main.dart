@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'pages/welcome.dart';
 import 'pages/favourite.dart';
@@ -10,6 +11,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:bloc/bloc.dart';
 
 import 'bloc/about/about_bloc.dart';
+import 'cubit/timer/timer_cubit.dart';
 
 void main() async {
   Bloc.observer = SimpleBlocObserver();
@@ -19,57 +21,59 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        accentColor: Colors.orangeAccent[400],
-        accentColorBrightness: Brightness.light,
-        backgroundColor: Colors.white,
-        primaryColor: Color(0xffE5E5E5), //#E5E5E5
+    return BlocProvider(
+      create: (context) => TimerCubit(),
+      child: MaterialApp(
+        theme: ThemeData(
+          accentColor: Colors.orangeAccent[400],
+          accentColorBrightness: Brightness.light,
+          backgroundColor: Colors.white,
+          primaryColor: Color(0xffE5E5E5), //#E5E5E5
+        ),
+        title: "GoodBuy",
+        routes: {
+          '/logo': (context) => FirstPage(),
+          //'/about': (context) => About(),
+          //'/not_found': (context) => NotFound(),
+          //'/': (context) => ScannerPage(),
+          //'/history': (context) => HistoryPage(),
+        },
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case '/about':
+              return PageTransition(
+                child: About(),
+                type: PageTransitionType.rightToLeft,
+                duration: Duration(milliseconds: 500),
+                settings: settings,
+              );
+              break;
+            case '/':
+              return PageTransition(
+                child: ScannerPage(),
+                type: PageTransitionType.rightToLeft,
+                duration: Duration(milliseconds: 500),
+              );
+              break;
+            case '/history':
+              return PageTransition(
+                child: HistoryPage(),
+                type: PageTransitionType.leftToRight,
+                duration: Duration(milliseconds: 500),
+              );
+              break;
+            case '/favourite':
+              return PageTransition(
+                child: FavouritePage(),
+                type: PageTransitionType.leftToRight,
+                duration: Duration(milliseconds: 500),
+              );
+              break;
+            default:
+              return null;
+          }
+        },
       ),
-      title: "GoodBuy",
-      routes: {
-        '/logo': (context) =>
-            FirstPage(), //используется для корневой домашней папки вместо параметра home
-        //'/about': (context) => About(),
-        //'/not_found': (context) => NotFound(),
-        //'/': (context) => ScannerPage(),
-        //'/history': (context) => HistoryPage(),
-      },
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case '/about':
-            return PageTransition(
-              child: About(),
-              type: PageTransitionType.rightToLeft,
-              duration: Duration(milliseconds: 500),
-              settings: settings,
-            );
-            break;
-          case '/':
-            return PageTransition(
-              child: ScannerPage(),
-              type: PageTransitionType.rightToLeft,
-              duration: Duration(milliseconds: 500),
-            );
-            break;
-          case '/history':
-            return PageTransition(
-              child: HistoryPage(),
-              type: PageTransitionType.leftToRight,
-              duration: Duration(milliseconds: 500),
-            );
-            break;
-          case '/favourite':
-            return PageTransition(
-              child: FavouritePage(),
-              type: PageTransitionType.leftToRight,
-              duration: Duration(milliseconds: 500),
-            );
-            break;
-          default:
-            return null;
-        }
-      },
     );
   }
 }

@@ -6,13 +6,14 @@ import 'package:meta/meta.dart';
 
 import '../../repository/repository.dart';
 import '../../models/full_product_info.dart';
-import '../../main.dart';
+import '../../cubit/timer/timer_cubit.dart';
 
 part 'about_event.dart';
 part 'about_state.dart';
 
 class AboutBloc extends Bloc<AboutEvent, AboutState> {
-  AboutBloc() : super(AboutInitial());
+  final TimerCubit timer;
+  AboutBloc(this.timer) : super(AboutInitial());
 
   Repository rep = Repository();
 
@@ -22,7 +23,7 @@ class AboutBloc extends Bloc<AboutEvent, AboutState> {
   ) async* {
     bool hasInternet = await checkInternet();
 
-    if (rep.productReviewsProvider.isAllowedNextReceive()) {
+    if (timer.isAllowedNextReceive()) {
       if (event is AboutStarted) {
         if (!hasInternet) {
           yield AboutNoIEConnection();
@@ -30,13 +31,11 @@ class AboutBloc extends Bloc<AboutEvent, AboutState> {
           try {
             FullProductInfo fullProductInfo =
                 await rep.getAllDataThatMeetsRequirements(event.qr);
-            //startTimestamp -= 20;
+            timer.reloadTimestamp();
             yield AboutLoadSuccess(fullProductInfo: fullProductInfo);
           } on NotFoundException {
-            //startTimestamp -= 20;
             yield AboutNotFound();
           } catch (error) {
-            print(error);
             yield AboutLoadFailure();
           }
         }
