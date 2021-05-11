@@ -7,13 +7,18 @@ import 'pages/about.dart';
 import 'pages/scanner_page.dart';
 import 'pages/history.dart';
 
+import 'pages/add_review.dart';
+
 import 'package:page_transition/page_transition.dart';
 import 'package:bloc/bloc.dart';
 
 import 'bloc/about/about_bloc.dart';
 import 'cubit/timer/timer_cubit.dart';
 
+import 'funcs/firebase_helper/realtime_database.dart';
+
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = SimpleBlocObserver();
   runApp(MyApp());
 }
@@ -54,6 +59,11 @@ class MyApp extends StatelessWidget {
                 type: PageTransitionType.rightToLeft,
                 duration: Duration(milliseconds: 500),
               );
+              // return PageTransition(
+              //   child: AddReview(),
+              //   type: PageTransitionType.rightToLeft,
+              //   duration: Duration(milliseconds: 500),
+              // );
               break;
             case '/history':
               return PageTransition(

@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "487377930268",
+    "firebase_url": "https://good-buy-c506a-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "good-buy-c506a",
+    "storage_bucket": "good-buy-c506a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487377930268:android:6fbfbc981a7f8f072d77d9",
+        "android_client_info": {
+          "package_name": "com.example.firebase_second"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "487377930268-os1mk3aocoffdg3i5hel7qo8vng4jpjm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPUECZCk6795DsXcqxbs8h4uBsjxmCrQs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "487377930268-os1mk3aocoffdg3i5hel7qo8vng4jpjm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487377930268:android:71acee1b7c0a94212d77d9",
+        "android_client_info": {
+          "package_name": "com.example.good_buy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "487377930268-os1mk3aocoffdg3i5hel7qo8vng4jpjm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPUECZCk6795DsXcqxbs8h4uBsjxmCrQs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "487377930268-os1mk3aocoffdg3i5hel7qo8vng4jpjm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

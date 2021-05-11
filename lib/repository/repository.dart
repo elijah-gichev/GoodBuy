@@ -63,7 +63,6 @@ class SomethingWrongWithOtzovikException implements Exception {
 
 class ProductReviewsProvider {
   Future<FullProductInfo> readData(String url) async {
-    //_reloadTimestamp();  !!!!!!!!!!!!!!!!!!!
     final response = await http.Client().get(Uri.parse(url));
 
     print(response.statusCode);
@@ -86,24 +85,6 @@ class ProductReviewsProvider {
       var ratingCount = int.parse(document
           .querySelector('.reviews-counter .votes')
           .innerHtml); // Количество отзывов
-
-      /*
-      var specsElem = document.querySelectorAll(
-          '.product-rating-details .rating-item'); // Все характеристики
-      var specs = []; // Массив характеристик
-      specsElem.forEach((element) {
-        // Перебираем все характеристики
-        var arr = element.attributes["title"].split(
-            " "); // Разбиваем тайтл, чтобы достать оценку и название характеристики
-        var name = arr[0].replaceAll(
-            ":", ""); // Забираем название характеристики и убираем двоеточие
-        specs.add({
-          // Зависываем в массив характеристику
-          "name": name,
-          "rate": arr[1]
-        });
-      });
-      */
 
       var reviews = document.querySelector(
           ".otz_product_reviews_left .review-list-2"); // Парсим лист отзывов
@@ -146,7 +127,6 @@ class ProductReviewsProvider {
           Review reviewObj = Review(
               author: author,
               rating: stars,
-              urlAuthorImg: authorImage,
               date: date,
               title: title,
               textPlus: textPlus,
@@ -176,7 +156,6 @@ class ProductReviewsProvider {
       Review(
           author: "Anton",
           rating: 5,
-          urlAuthorImg: "url img",
           date: "now1",
           title: "all OK",
           textPlus: "all OK",
@@ -185,7 +164,6 @@ class ProductReviewsProvider {
       Review(
           author: "Evgen",
           rating: 2,
-          urlAuthorImg: "url img2",
           date: "now12",
           title: "all OK2",
           textPlus: "all OK2",
@@ -194,7 +172,6 @@ class ProductReviewsProvider {
       Review(
           author: "Alex",
           rating: 4,
-          urlAuthorImg: "alex img",
           date: "now123",
           title: "all OK23",
           textPlus: "all OK23",
@@ -203,7 +180,6 @@ class ProductReviewsProvider {
       Review(
           author: "Elijah",
           rating: 1,
-          urlAuthorImg: "elijah img",
           date: "now1233",
           title: "all OK23323",
           textPlus: "all OK2323asas",
@@ -213,7 +189,7 @@ class ProductReviewsProvider {
     await Future.delayed(Duration(milliseconds: 500), () {
       res = FullProductInfo(
           title: "emulate name; qr",
-          urlProductImg: "emulate img",
+          urlProductImg: "There must be url img",
           generalRating: 1,
           countRating: 666,
           reviews: reviewsList);
