@@ -15,13 +15,6 @@ class _ScannerPageState extends State<ScannerPage> {
   String qr = "empty";
   bool camState = true;
 
-  int _selectedIndex = 0;
-  void _selectedTab(int index) {
-    setState() {
-      _selectedIndex = index;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

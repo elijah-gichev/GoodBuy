@@ -15,8 +15,6 @@ import 'package:bloc/bloc.dart';
 import 'bloc/about/about_bloc.dart';
 import 'cubit/timer/timer_cubit.dart';
 
-import 'funcs/firebase_helper/realtime_database.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = SimpleBlocObserver();
@@ -38,6 +36,7 @@ class MyApp extends StatelessWidget {
         title: "GoodBuy",
         routes: {
           '/logo': (context) => FirstPage(),
+          '/add_review': (context) => AddReview(),
           //'/about': (context) => About(),
           //'/not_found': (context) => NotFound(),
           //'/': (context) => ScannerPage(),

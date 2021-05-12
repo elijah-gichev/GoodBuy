@@ -9,12 +9,28 @@ class ReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(review);
+
     return Card(
+      //shadowColor: Theme.of(context).accentColor,
+      elevation: 5,
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Text(
+              review.reviewSrc.toEnumString() + " отзыв",
+              style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
           ListTile(
-            //leading: Icon(Icons.arrow_drop_down_circle),
+            // leading: Icon(
+            //   Icons.home,
+            //   color: Theme.of(context).accentColor,
+            // ),
             title: Text(review.author ?? "null"),
             subtitle: Text(
               review.date,
@@ -24,13 +40,6 @@ class ReviewCard extends StatelessWidget {
               '${review.rating}/5',
               style: TextStyle(
                   color: review.rating <= 3 ? Colors.red : Colors.green),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              review.text,
-              style: TextStyle(color: Colors.black.withOpacity(0.6)),
             ),
           ),
           ListTile(
@@ -55,6 +64,13 @@ class ReviewCard extends StatelessWidget {
             subtitle: Text(
               'Недостатки',
               style: TextStyle(color: Colors.red.withOpacity(0.6)),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              review.text,
+              style: TextStyle(color: Colors.black.withOpacity(0.6)),
             ),
           ),
         ],

@@ -15,7 +15,19 @@ class FullProductInfo {
       @required this.reviews});
 }
 
+enum ReviewSource {
+  otzovik,
+  goodBuy,
+}
+
+extension ParseToString on ReviewSource {
+  String toEnumString() {
+    return this.toString().split('.').last;
+  }
+}
+
 class Review {
+  final ReviewSource reviewSrc;
   final String author;
   final int rating;
   final String date;
@@ -25,7 +37,8 @@ class Review {
   final String text;
 
   Review(
-      {@required this.author,
+      {@required this.reviewSrc,
+      @required this.author,
       @required this.rating,
       @required this.date,
       @required this.title,
@@ -34,7 +47,8 @@ class Review {
       @required this.text});
 
   Review.fromJson(Map<String, dynamic> json)
-      : author = json['author'],
+      : reviewSrc = json['reviewSrc'],
+        author = json['author'],
         rating = json['rating'],
         date = json['date'],
         title = json['title'],
@@ -55,7 +69,7 @@ class Review {
   @override
   String toString() {
     String out = "";
-
+    out += "'reviewSrc': ${reviewSrc.toEnumString()} \n";
     out += "'author': $author \n";
     out += "'rating': $rating \n";
     out += "'date': $date \n";

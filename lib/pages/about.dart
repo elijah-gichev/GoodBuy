@@ -10,6 +10,9 @@ import '../widgets/scan_fab.dart';
 import '../widgets/review_card.dart';
 import '../widgets/something_wrong.dart';
 
+import '../models/full_product_info.dart';
+import 'dart:math';
+
 class About extends StatefulWidget {
   @override
   _AboutState createState() => _AboutState();
@@ -131,34 +134,29 @@ class _AboutBodyState extends State<AboutBody> {
                           trailing: Text(
                               '${state.fullProductInfo.countRating} отзыва'),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            '---------',
-                            style:
-                                TextStyle(color: Colors.black.withOpacity(0.6)),
-                          ),
-                        ),
-                        //пока непонятно, что делать с картинкой, пока их будет 2 в строке
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        //   children: [
-                        //     Expanded(
-                        //       child: Image.asset(
-                        //         'assets/cheese.jpg',
-                        //         fit: BoxFit.scaleDown,
-                        //       ),
-                        //     ),
-                        //     Expanded(
-                        //       child: Image.asset(
-                        //         'assets/cheese.jpg',
-                        //         fit: BoxFit.scaleDown,
-                        //       ),
-                        //     ),
-                        //     // Image.network(
-                        //     //     "https://i.otzovik.com/objects/b/870000/867684.png",)//нужен лоадер
-                        //   ],
-                        // ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text('Возможно текст'),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: FloatingActionButton.extended(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/add_review',
+                                      arguments: qr);
+                                },
+                                label: Text(
+                                  'Создать отзыв',
+                                  style: TextStyle(
+                                      color: Theme.of(context).accentColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                backgroundColor: Colors.white,
+                                elevation: 5,
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
@@ -168,7 +166,8 @@ class _AboutBodyState extends State<AboutBody> {
                       itemCount: state.fullProductInfo.reviews.length,
                       itemBuilder: (context, index) {
                         return ReviewCard(
-                            review: state.fullProductInfo.reviews[index]);
+                          review: state.fullProductInfo.reviews[index],
+                        );
                       },
                     ),
                   ),

@@ -42,7 +42,7 @@ class _AddReviewState extends State<AddReview> {
 }
 
 class AddReviewForm extends StatefulWidget {
-  final String qr = "1234567890";
+  //final String qr = "1234567890";
   @override
   _AddReviewForm createState() => _AddReviewForm();
 }
@@ -51,11 +51,19 @@ class _AddReviewForm extends State<AddReviewForm> {
   //final InputDecoration _fieldDecoration = _fieldDecoration();
   final _formKey = GlobalKey<FormState>();
   double _sliderValue = 0;
+  String qr;
 
   final TextEditingController authorController = TextEditingController();
   final TextEditingController textPlusController = TextEditingController();
   final TextEditingController textMinusController = TextEditingController();
   final TextEditingController textController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    qr = ModalRoute.of(context).settings.arguments;
+    //print("qr: $qr");
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +134,9 @@ class _AddReviewForm extends State<AddReviewForm> {
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Processing Data')));
+                        SnackBar(content: Text('Отзыв отправлен')));
+
+                    Navigator.pop(context);
 
                     String author = authorController.text;
                     int rating = _sliderValue.truncate();
@@ -141,6 +151,7 @@ class _AddReviewForm extends State<AddReviewForm> {
                         text.length > 30 ? text.substring(0, 30) + ".." : text;
 
                     Review review = Review(
+                      reviewSrc: ReviewSource.goodBuy,
                       author: author,
                       rating: rating,
                       date: date,
@@ -150,7 +161,7 @@ class _AddReviewForm extends State<AddReviewForm> {
                       text: text,
                     );
 
-                    addReview(widget.qr, review); //добавляем в fb
+                    addReview(qr, review); //добавляем в fb
 
                     // print("rating: $rating");
                     // print("author: $author");

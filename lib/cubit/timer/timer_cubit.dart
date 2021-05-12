@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 part 'timer_state.dart';
 
 class TimerCubit extends Cubit<TimerState> {
-  static const int DURATION = 5;
+  static const int DURATION = 15;
   int _currentTimestamp;
   TimerCubit() : super(TimerInitial());
 

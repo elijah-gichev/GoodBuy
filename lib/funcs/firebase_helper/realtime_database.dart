@@ -29,6 +29,7 @@ Future<List<Review>> getReviews(String qr) async {
     rawReviews.forEach((key, value) {
       Map<dynamic, dynamic> review = value;
       Review nRev = Review(
+        reviewSrc: ReviewSource.goodBuy,
         author: review['author'],
         rating: review['rating'],
         date: "there must be date",

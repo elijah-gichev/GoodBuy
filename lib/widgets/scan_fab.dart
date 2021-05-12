@@ -9,6 +9,7 @@ class _ScanFABState extends State<ScanFAB> {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      heroTag: "main_button",
       onPressed: () {
         Navigator.of(context).pushNamed('/');
       },

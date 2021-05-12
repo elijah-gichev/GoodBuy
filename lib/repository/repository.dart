@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 import '../models/full_product_info.dart';
 import '../funcs/pref_helper/save_product_local.dart';
@@ -20,7 +21,7 @@ class Repository {
     FullProductInfo reviewsInfo;
     try {
       //reviewsInfo = await productReviewsProvider.readData(linkInfo.link);
-      reviewsInfo = await productReviewsProvider.emulateReadData();
+      reviewsInfo = await productReviewsProvider.emulateReadData(qr);
 
       saveProductLocal(reviewsInfo.title, reviewsInfo.generalRating,
           reviewsInfo.urlProductImg, reviewsInfo.countRating, qr);
@@ -28,7 +29,6 @@ class Repository {
       print("Exception in productReviewsProvider");
     }
 
-    //print(reviewsInfo.countRating);
     return reviewsInfo;
   }
 }
@@ -125,6 +125,7 @@ class ProductReviewsProvider {
 
           // Все данные собираем в объект
           Review reviewObj = Review(
+              reviewSrc: ReviewSource.goodBuy,
               author: author,
               rating: stars,
               date: date,
@@ -149,11 +150,12 @@ class ProductReviewsProvider {
     }
   }
 
-  Future<FullProductInfo> emulateReadData() async {
+  Future<FullProductInfo> emulateReadData(String qr) async {
     FullProductInfo res;
 
     List<Review> reviewsList = [
       Review(
+          reviewSrc: ReviewSource.otzovik,
           author: "Anton",
           rating: 5,
           date: "now1",
@@ -162,6 +164,7 @@ class ProductReviewsProvider {
           textMinus: "all bad",
           text: "lorum 1"),
       Review(
+          reviewSrc: ReviewSource.otzovik,
           author: "Evgen",
           rating: 2,
           date: "now12",
@@ -170,6 +173,7 @@ class ProductReviewsProvider {
           textMinus: "all bad2",
           text: "lorum 12"),
       Review(
+          reviewSrc: ReviewSource.otzovik,
           author: "Alex",
           rating: 4,
           date: "now123",
@@ -178,6 +182,7 @@ class ProductReviewsProvider {
           textMinus: "all bad23",
           text: "lorum 1233333"),
       Review(
+          reviewSrc: ReviewSource.otzovik,
           author: "Elijah",
           rating: 1,
           date: "now1233",
@@ -186,6 +191,10 @@ class ProductReviewsProvider {
           textMinus: "all bad2sas",
           text: "lorum 12sasasas"),
     ];
+
+    reviewsList.addAll(await FirebaseReviewsProvider.readData(
+        qr)); //добавление отзывов из фаербейс
+
     await Future.delayed(Duration(milliseconds: 500), () {
       res = FullProductInfo(
           title: "emulate name; qr",
@@ -198,6 +207,59 @@ class ProductReviewsProvider {
     return res;
   }
 }
+
+class FirebaseReviewsProvider {
+  static Future<List<Review>> readData(String qr) async {
+    DatabaseReference ref = FirebaseDatabase.instance.reference().child(qr);
+
+    Map<dynamic, dynamic> rawReviews = (await ref.once()).value;
+
+    // if (rawReviews == null) {
+    //   throw NotFoundException();
+    // } else {
+    //   List<Review> reviews = [];
+    //   rawReviews.forEach((key, value) {
+    //     Map<dynamic, dynamic> review = value;
+    //     Review nRev = Review(
+    //       reviewSrc: ReviewSource.goodBuy,
+    //       author: review['author'],
+    //       rating: review['rating'],
+    //       date: "there must be date",
+    //       title: review['title'],
+    //       textPlus: "there must be textPlus",
+    //       textMinus: "there must be textMinus",
+    //       text: review['text'],
+    //     );
+    //     reviews.add(nRev);
+    //   });
+    //   return reviews;
+    // }
+    if (rawReviews == null) {
+      return [];
+    }
+
+    List<Review> reviews = [];
+    rawReviews.forEach((key, value) {
+      Map<dynamic, dynamic> review = value;
+      Review nRev = Review(
+        reviewSrc: ReviewSource.goodBuy,
+        author: review['author'],
+        rating: review['rating'],
+        date: review['date'],
+        title: review['title'],
+        textPlus: review['textPlus'],
+        textMinus: review['textMinus'],
+        text: review['text'],
+      );
+      reviews.add(nRev);
+    });
+    return reviews;
+  }
+}
+
+// class NotFoundException implements Exception {
+//   String errMsg() => 'product not found in the DB';
+// }
 
 class FetchedLink {
   final String id;
