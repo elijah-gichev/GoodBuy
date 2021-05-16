@@ -6,7 +6,7 @@ abstract class FavouriteState {}
 class FavouriteInitial extends FavouriteState {}
 
 class FavouriteLoadSuccess extends FavouriteState {
-  List<Product> savedProducts;
+  final List<Product> savedProducts;
 
   FavouriteLoadSuccess({this.savedProducts});
 }

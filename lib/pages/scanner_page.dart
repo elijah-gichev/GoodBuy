@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../widgets/bottom_nav_bar.dart';
 import 'package:qr_mobile_vision/qr_camera.dart';
 import 'package:qr_mobile_vision/qr_mobile_vision.dart';

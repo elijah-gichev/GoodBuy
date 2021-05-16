@@ -107,9 +107,9 @@ class ProductReviewsProvider {
           .querySelector('.product-name [itemprop="name"]')
           .innerHtml; // Название товара
 
-      var img = document
-          .querySelector('.product-photo [itemprop="image"]')
-          .attributes["src"];
+      // var img = document
+      //     .querySelector('.product-photo [itemprop="image"]')
+      //     .attributes["src"];
 
       var rating = double.parse(document
           .querySelector('.product-rating')

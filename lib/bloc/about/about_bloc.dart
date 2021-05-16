@@ -29,9 +29,10 @@ class AboutBloc extends Bloc<AboutEvent, AboutState> {
           yield AboutNoIEConnection();
         } else {
           try {
+            timer.reloadTimestamp();
             FullProductInfo fullProductInfo =
                 await rep.getAllDataThatMeetsRequirements(event.qr);
-            timer.reloadTimestamp();
+
             yield AboutLoadSuccess(fullProductInfo: fullProductInfo);
           } on NotFoundException {
             yield AboutNotFound();

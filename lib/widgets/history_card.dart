@@ -23,7 +23,7 @@ class HistoryCard extends StatelessWidget {
               style: TextStyle(color: Colors.black.withOpacity(0.6)),
             ),
             trailing: Text(
-              '$stars/5',
+              '${stars.toStringAsFixed(2)}/5',
               style: TextStyle(color: stars <= 3 ? Colors.red : Colors.green),
             ),
           ),

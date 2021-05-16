@@ -6,7 +6,7 @@ abstract class HistoryState {}
 class HistoryInitial extends HistoryState {}
 
 class HistoryLoadSuccess extends HistoryState {
-  List<Product> savedProducts;
+  final List<Product> savedProducts;
 
   HistoryLoadSuccess({this.savedProducts});
 }

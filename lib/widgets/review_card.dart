@@ -9,8 +9,6 @@ class ReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(review);
-
     return Card(
       //shadowColor: Theme.of(context).accentColor,
       elevation: 5,
