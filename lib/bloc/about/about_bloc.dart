@@ -36,6 +36,7 @@ class AboutBloc extends Bloc<AboutEvent, AboutState> {
           } on NotFoundException {
             yield AboutNotFound();
           } catch (error) {
+            print(error.toString());
             yield AboutLoadFailure();
           }
         }

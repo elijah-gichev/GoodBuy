@@ -14,27 +14,53 @@ class Repository {
   final ProductReviewsProvider productReviewsProvider =
       ProductReviewsProvider();
 
-  Future<FullProductInfo> getAllDataThatMeetsRequirements(String qr) async {
-    //final FetchedLink linkInfo =
-    //    await linkProvider.readData(qr); //получили с бд ссылку на товары
+  final FirebaseReviewsProvider firebaseReviewsProvider =
+      FirebaseReviewsProvider();
 
+  Future<FullProductInfo> getAllDataThatMeetsRequirements(String qr) async {
     FullProductInfo reviewsInfo;
     try {
-      //reviewsInfo = await productReviewsProvider.readData(linkInfo.link);
-      reviewsInfo = await productReviewsProvider.emulateReadData(qr);
+      final FetchedLink linkInfo =
+          await linkProvider.readData(qr); //получили с бд ссылку на товары
 
-      saveProductLocal(reviewsInfo.title, reviewsInfo.generalRating,
-          reviewsInfo.urlProductImg, reviewsInfo.countRating, qr);
+      reviewsInfo = await productReviewsProvider
+          .readData(linkInfo.link); // настоящие данные
+
+      // reviewsInfo = await productReviewsProvider
+      //     .emulateReadData(qr); //данные для тестирования
+
+      reviewsInfo.reviews.addAll(await firebaseReviewsProvider
+          .readData(qr)); //добавление отзывов из фаербейс
+
+    } on LinkNotFoundException {
+      reviewsInfo = FullProductInfo(
+          title: "Товар",
+          generalRating: 0,
+          countRating: 0,
+          reviews: []); //если товар не найден, тогда пусто
+
+      reviewsInfo.reviews.addAll(await firebaseReviewsProvider.readData(qr));
     } catch (ec) {
       print("Exception in productReviewsProvider");
+    } finally {
+      if (reviewsInfo.reviews.isNotEmpty) {
+        reviewsInfo.countRating = reviewsInfo.reviews.length;
+        reviewsInfo.generalRating = reviewsInfo.reviews
+                .map((review) => review.rating)
+                .reduce((value, element) => value + element) /
+            reviewsInfo.reviews.length;
+      }
+
+      saveProductLocal(reviewsInfo.title, reviewsInfo.generalRating,
+          "reviewsInfo.urlProductImg", reviewsInfo.countRating, qr);
+    }
+
+    if (reviewsInfo.reviews.isEmpty) {
+      throw NotFoundException();
     }
 
     return reviewsInfo;
   }
-}
-
-class NotFoundException implements Exception {
-  String errMsg() => 'product not found in the DB';
 }
 
 class LinkProvider {
@@ -52,13 +78,21 @@ class LinkProvider {
           createdDate: data['createdDate']);
     } else {
       print(response.statusCode);
-      throw NotFoundException();
+      throw LinkNotFoundException();
     }
   }
 }
 
 class SomethingWrongWithOtzovikException implements Exception {
   String errMsg() => 'Something Wrong With Otzovik';
+}
+
+class NotFoundException implements Exception {
+  String errMsg() => 'nothing not found';
+}
+
+class LinkNotFoundException implements Exception {
+  String errMsg() => 'link not found in the DB';
 }
 
 class ProductReviewsProvider {
@@ -99,9 +133,9 @@ class ProductReviewsProvider {
               .querySelector('.user-login span')
               .innerHtml; // Ник автора отзыва
 
-          var authorImage = review
-              .querySelector(".avatar img")
-              .attributes["data-original"]; // Аватарка автора отзыва
+          // var authorImage = review
+          //     .querySelector(".avatar img")
+          //     .attributes["data-original"]; // Аватарка автора отзыва
 
           var date = review
               .querySelector(".review-postdate span")
@@ -125,7 +159,7 @@ class ProductReviewsProvider {
 
           // Все данные собираем в объект
           Review reviewObj = Review(
-              reviewSrc: ReviewSource.goodBuy,
+              reviewSrc: ReviewSource.otzovik,
               author: author,
               rating: stars,
               date: date,
@@ -141,7 +175,6 @@ class ProductReviewsProvider {
       //List<Review> reviewsList = [];
       return FullProductInfo(
           title: name,
-          urlProductImg: img,
           generalRating: rating,
           countRating: ratingCount,
           reviews: reviewsList);
@@ -192,48 +225,29 @@ class ProductReviewsProvider {
           text: "lorum 12sasasas"),
     ];
 
-    reviewsList.addAll(await FirebaseReviewsProvider.readData(
-        qr)); //добавление отзывов из фаербейс
-
     await Future.delayed(Duration(milliseconds: 500), () {
       res = FullProductInfo(
           title: "emulate name; qr",
-          urlProductImg: "There must be url img",
           generalRating: 1,
           countRating: 666,
           reviews: reviewsList);
     });
 
-    return res;
+    //return res;
+    return FullProductInfo(
+        title: "emulate name; qr",
+        generalRating: 1,
+        countRating: 666,
+        reviews: []);
   }
 }
 
 class FirebaseReviewsProvider {
-  static Future<List<Review>> readData(String qr) async {
+  Future<List<Review>> readData(String qr) async {
     DatabaseReference ref = FirebaseDatabase.instance.reference().child(qr);
 
     Map<dynamic, dynamic> rawReviews = (await ref.once()).value;
 
-    // if (rawReviews == null) {
-    //   throw NotFoundException();
-    // } else {
-    //   List<Review> reviews = [];
-    //   rawReviews.forEach((key, value) {
-    //     Map<dynamic, dynamic> review = value;
-    //     Review nRev = Review(
-    //       reviewSrc: ReviewSource.goodBuy,
-    //       author: review['author'],
-    //       rating: review['rating'],
-    //       date: "there must be date",
-    //       title: review['title'],
-    //       textPlus: "there must be textPlus",
-    //       textMinus: "there must be textMinus",
-    //       text: review['text'],
-    //     );
-    //     reviews.add(nRev);
-    //   });
-    //   return reviews;
-    // }
     if (rawReviews == null) {
       return [];
     }
@@ -243,23 +257,19 @@ class FirebaseReviewsProvider {
       Map<dynamic, dynamic> review = value;
       Review nRev = Review(
         reviewSrc: ReviewSource.goodBuy,
-        author: review['author'],
-        rating: review['rating'],
-        date: review['date'],
-        title: review['title'],
-        textPlus: review['textPlus'],
-        textMinus: review['textMinus'],
-        text: review['text'],
+        author: review['author'] ?? "null",
+        rating: review['rating'] ?? 0,
+        date: review['date'] ?? "null",
+        title: review['title'] ?? "null",
+        textPlus: review['textPlus'] ?? "null",
+        textMinus: review['textMinus'] ?? "null",
+        text: review['text'] ?? "null",
       );
       reviews.add(nRev);
     });
     return reviews;
   }
 }
-
-// class NotFoundException implements Exception {
-//   String errMsg() => 'product not found in the DB';
-// }
 
 class FetchedLink {
   final String id;

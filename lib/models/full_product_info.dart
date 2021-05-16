@@ -2,14 +2,12 @@ import 'package:meta/meta.dart';
 
 class FullProductInfo {
   final String title;
-  final String urlProductImg;
-  final double generalRating;
-  final int countRating;
+  double generalRating;
+  int countRating;
   final List<Review> reviews;
 
   FullProductInfo(
       {@required this.title,
-      @required this.urlProductImg,
       @required this.generalRating,
       @required this.countRating,
       @required this.reviews});

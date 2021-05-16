@@ -10,9 +10,6 @@ import '../widgets/scan_fab.dart';
 import '../widgets/review_card.dart';
 import '../widgets/something_wrong.dart';
 
-import '../models/full_product_info.dart';
-import 'dart:math';
-
 class About extends StatefulWidget {
   @override
   _AboutState createState() => _AboutState();
@@ -63,7 +60,28 @@ class _AboutBodyState extends State<AboutBody> {
               ),
             );
           } else if (state is AboutNotFound) {
-            return SomethingWrong(text: 'Данный товар не найден!');
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SomethingWrong(text: 'Данный товар не найден!'),
+                  FloatingActionButton.extended(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/add_review',
+                          arguments: qr);
+                    },
+                    label: Text(
+                      'Создать отзыв',
+                      style: TextStyle(
+                          color: Theme.of(context).accentColor,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    backgroundColor: Colors.white,
+                    elevation: 5,
+                  ),
+                ],
+              ),
+            );
           } else if (state is AboutNextScanNotAllowed) {
             return Center(
               child: Container(
@@ -73,7 +91,7 @@ class _AboutBodyState extends State<AboutBody> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "Следующее сканирование будет доступно в течение 20 секунд!",
+                      "Следующее сканирование будет доступно через 15 секунд!",
                       style: TextStyle(color: Colors.green),
                     ),
                     SizedBox(
@@ -82,7 +100,7 @@ class _AboutBodyState extends State<AboutBody> {
                     Row(
                       children: [
                         Text(
-                          "Через 20с нажмите на кнопку",
+                          "через 15 секунд! нажмите на кнопку",
                           style: TextStyle(color: Colors.green),
                         ),
                         Icon(
@@ -127,7 +145,7 @@ class _AboutBodyState extends State<AboutBody> {
                           title:
                               Text(state.fullProductInfo.title ?? "null title"),
                           subtitle: Text(
-                            'Средняя оценка: ${state.fullProductInfo.generalRating}',
+                            'Средняя оценка: ${state.fullProductInfo.generalRating.toStringAsFixed(2)}',
                             style:
                                 TextStyle(color: Colors.black.withOpacity(0.6)),
                           ),
