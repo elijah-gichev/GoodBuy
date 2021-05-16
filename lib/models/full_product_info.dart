@@ -25,6 +25,7 @@ extension ParseToString on ReviewSource {
 }
 
 class Review {
+  final String url;
   final ReviewSource reviewSrc;
   final String author;
   final int rating;
@@ -35,7 +36,8 @@ class Review {
   final String text;
 
   Review(
-      {@required this.reviewSrc,
+      {@required this.url,
+      @required this.reviewSrc,
       @required this.author,
       @required this.rating,
       @required this.date,
@@ -45,7 +47,8 @@ class Review {
       @required this.text});
 
   Review.fromJson(Map<String, dynamic> json)
-      : reviewSrc = json['reviewSrc'],
+      : url = json['url'],
+        reviewSrc = json['reviewSrc'],
         author = json['author'],
         rating = json['rating'],
         date = json['date'],

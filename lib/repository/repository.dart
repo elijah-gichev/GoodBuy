@@ -159,6 +159,7 @@ class ProductReviewsProvider {
 
           // Все данные собираем в объект
           Review reviewObj = Review(
+              url: url,
               reviewSrc: ReviewSource.otzovik,
               author: author,
               rating: stars,
@@ -188,6 +189,7 @@ class ProductReviewsProvider {
 
     List<Review> reviewsList = [
       Review(
+          url: "google.com",
           reviewSrc: ReviewSource.otzovik,
           author: "Anton",
           rating: 5,
@@ -197,6 +199,7 @@ class ProductReviewsProvider {
           textMinus: "all bad",
           text: "lorum 1"),
       Review(
+          url: "google.com",
           reviewSrc: ReviewSource.otzovik,
           author: "Evgen",
           rating: 2,
@@ -206,6 +209,7 @@ class ProductReviewsProvider {
           textMinus: "all bad2",
           text: "lorum 12"),
       Review(
+          url: "google.com",
           reviewSrc: ReviewSource.otzovik,
           author: "Alex",
           rating: 4,
@@ -215,6 +219,7 @@ class ProductReviewsProvider {
           textMinus: "all bad23",
           text: "lorum 1233333"),
       Review(
+          url: "google.com",
           reviewSrc: ReviewSource.otzovik,
           author: "Elijah",
           rating: 1,
@@ -256,6 +261,7 @@ class FirebaseReviewsProvider {
     rawReviews.forEach((key, value) {
       Map<dynamic, dynamic> review = value;
       Review nRev = Review(
+        url: "Firebase",
         reviewSrc: ReviewSource.goodBuy,
         author: review['author'] ?? "null",
         rating: review['rating'] ?? 0,

@@ -151,6 +151,7 @@ class _AddReviewForm extends State<AddReviewForm> {
                         text.length > 30 ? text.substring(0, 30) + ".." : text;
 
                     Review review = Review(
+                      url: "Firebase",
                       reviewSrc: ReviewSource.goodBuy,
                       author: author,
                       rating: rating,

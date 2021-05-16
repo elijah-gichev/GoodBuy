@@ -1,6 +1,8 @@
 import '../models/full_product_info.dart';
 import 'package:flutter/material.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+
 class ReviewCard extends StatelessWidget {
   final Review review;
   ReviewCard({
@@ -71,8 +73,60 @@ class ReviewCard extends StatelessWidget {
               style: TextStyle(color: Colors.black.withOpacity(0.6)),
             ),
           ),
+          MoreInfo(
+            review: review,
+          )
         ],
       ),
     );
+  }
+}
+
+class MoreInfo extends StatefulWidget {
+  final Review review;
+  MoreInfo({
+    @required this.review,
+  });
+
+  String _getContent() {
+    if (review.reviewSrc == ReviewSource.otzovik) {
+      return review.url;
+    } else {
+      return "Веб-версия GoodBuy reviews пока не доступна";
+    }
+  }
+
+  @override
+  _MoreInfoState createState() => _MoreInfoState(_getContent());
+}
+
+class _MoreInfoState extends State<MoreInfo> {
+  final String content;
+
+  _MoreInfoState(this.content);
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(title: Text('Больше информации'), children: <Widget>[
+      Padding(
+        padding: const EdgeInsets.only(bottom: 18.0),
+        //child: Text(content),
+        child: TextButton(
+          child: Text(content),
+          onPressed: () {
+            _launchURL(content);
+          },
+        ),
+      ),
+    ]);
+  }
+
+  _launchURL(String url) async {
+    //const url = 'https://flutter.io';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
