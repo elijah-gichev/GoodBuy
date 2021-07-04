@@ -34,52 +34,37 @@ class MyApp extends StatelessWidget {
           primaryColor: Color(0xffE5E5E5), //#E5E5E5
         ),
         title: "GoodBuy",
-        routes: {
-          '/logo': (context) => FirstPage(),
-          '/add_review': (context) => AddReview(),
-          //'/about': (context) => About(),
-          //'/not_found': (context) => NotFound(),
-          //'/': (context) => ScannerPage(),
-          //'/history': (context) => HistoryPage(),
-        },
         onGenerateRoute: (settings) {
           switch (settings.name) {
+            case '/':
+              return PageTransitionWrapper(child: ScannerPage());
+              break;
+            case '/logo':
+              //не нужен красивый Transition
+              return MaterialPageRoute(builder: (context) => FirstPage());
+              break;
+            case '/add_review':
+              //не нужен красивый Transition
+              return MaterialPageRoute(builder: (context) => AddReview());
+              break;
             case '/about':
-              return PageTransition(
+              return PageTransitionWrapper(
                 child: About(),
-                type: PageTransitionType.rightToLeft,
-                duration: Duration(milliseconds: 500),
                 settings: settings,
               );
               break;
-            case '/':
-              return PageTransition(
-                child: ScannerPage(),
-                type: PageTransitionType.rightToLeft,
-                duration: Duration(milliseconds: 500),
-              );
-              // return PageTransition(
-              //   child: AddReview(),
-              //   type: PageTransitionType.rightToLeft,
-              //   duration: Duration(milliseconds: 500),
-              // );
-              break;
             case '/history':
-              return PageTransition(
+              return PageTransitionWrapper(
                 child: HistoryPage(),
-                type: PageTransitionType.leftToRight,
-                duration: Duration(milliseconds: 500),
               );
               break;
             case '/favourite':
-              return PageTransition(
+              return PageTransitionWrapper(
                 child: FavouritePage(),
-                type: PageTransitionType.leftToRight,
-                duration: Duration(milliseconds: 500),
               );
               break;
             default:
-              return null;
+              throw UnimplementedError();
           }
         },
       ),
@@ -87,65 +72,16 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class ScaleRoute extends PageRouteBuilder {
-  final Widget page;
-  ScaleRoute({this.page})
-      : super(
-          pageBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) =>
-              page,
-          transitionsBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) =>
-              ScaleTransition(
-            scale: Tween<double>(
-              begin: 0.0,
-              end: 1.0,
-            ).animate(
-              CurvedAnimation(
-                parent: animation,
-                curve: Curves.fastOutSlowIn,
-              ),
-            ),
-            child: child,
-          ),
-        );
-}
-
-class RotationRoute extends PageRouteBuilder {
-  final Widget page;
-  RotationRoute({this.page})
-      : super(
-          pageBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) =>
-              page,
-          transitionDuration: Duration(seconds: 1),
-          transitionsBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) =>
-              RotationTransition(
-            turns: Tween<double>(
-              begin: 0.0,
-              end: 1.0,
-            ).animate(
-              CurvedAnimation(
-                parent: animation,
-                curve: Curves.linear,
-              ),
-            ),
-            child: child,
-          ),
+class PageTransitionWrapper extends PageTransition {
+  PageTransitionWrapper({
+    @required Widget child,
+    PageTransitionType type = PageTransitionType.leftToRight,
+    int durationAmount = 500,
+    RouteSettings settings,
+  }) : super(
+          child: child,
+          type: type,
+          duration: Duration(milliseconds: durationAmount),
+          settings: settings,
         );
 }
